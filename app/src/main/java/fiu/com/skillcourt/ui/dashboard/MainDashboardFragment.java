@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.ui.LauncherActivity;
 import fiu.com.skillcourt.ui.base.BaseFragment;
+import fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsActivity;
 
 public class MainDashboardFragment extends BaseFragment {
 
@@ -44,6 +46,14 @@ public class MainDashboardFragment extends BaseFragment {
             TextView tvWelcome = (TextView)getView().findViewById(R.id.tv_welcome);
             tvWelcome.setText("Welcome "+ email);
         }
+        Button startCustomSteps = (Button) getView().findViewById(R.id.start_custom_steps);
+        startCustomSteps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), DynamicStepsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
