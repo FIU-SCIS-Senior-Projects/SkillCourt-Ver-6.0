@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_skillcourt5" default="compile.module.skillcourt5">
+  <dirname property="module.skillcourt5.basedir" file="${ant.file.module_skillcourt5}"/>
+  
+  <property name="module.jdk.home.skillcourt5" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.skillcourt5" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.skillcourt5" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.skillcourt5" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="skillcourt5.output.dir" value="undefined"/>
+  <property name="skillcourt5.testoutput.dir" value="undefined"/>
+  
+  <path id="skillcourt5.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="skillcourt5.module.production.classpath">
+    <path refid="${module.jdk.classpath.skillcourt5}"/>
+  </path>
+  
+  <path id="skillcourt5.runtime.production.module.classpath"/>
+  
+  <path id="skillcourt5.module.classpath">
+    <path refid="${module.jdk.classpath.skillcourt5}"/>
+  </path>
+  
+  <path id="skillcourt5.runtime.module.classpath"/>
+  
+  
+  <patternset id="excluded.from.module.skillcourt5">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.skillcourt5">
+    <patternset refid="excluded.from.module.skillcourt5"/>
+  </patternset>
+  
+  
+  <target name="compile.module.skillcourt5" depends="compile.module.skillcourt5.production,compile.module.skillcourt5.tests" description="Compile module SkillCourt5"/>
+  
+  <target name="compile.module.skillcourt5.production" depends="register.custom.compilers" description="Compile module SkillCourt5; production classes"/>
+  
+  <target name="compile.module.skillcourt5.tests" depends="register.custom.compilers,compile.module.skillcourt5.production" description="compile module SkillCourt5; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.skillcourt5" description="cleanup module">
+    <delete dir="${skillcourt5.output.dir}"/>
+    <delete dir="${skillcourt5.testoutput.dir}"/>
+  </target>
+</project>
