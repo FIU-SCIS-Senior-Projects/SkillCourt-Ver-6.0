@@ -2,6 +2,6 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_dynamic_steps"
-    android:name="fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsActivityFragment"
+    android:name="fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"/>

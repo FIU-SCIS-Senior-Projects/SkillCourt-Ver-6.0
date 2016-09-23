@@ -1,10 +1,11 @@
-package fiu.com.skillcourt.ui.dynamicsteps;
+package fiu.com.skillcourt.ui.custom;
 
 import android.content.Context;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.manager.StepManager;
 import pedrocarrillo.com.materialstepperlibrary.StepView;
 
 /**

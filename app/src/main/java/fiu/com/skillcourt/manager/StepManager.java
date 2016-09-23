@@ -1,8 +1,6 @@
-package fiu.com.skillcourt.ui.dynamicsteps;
+package fiu.com.skillcourt.manager;
 
 import android.util.SparseIntArray;
-
-import java.util.HashMap;
 
 /**
  * Created by pedrocarrillo on 9/21/16.

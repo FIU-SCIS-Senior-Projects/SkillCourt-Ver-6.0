@@ -8,19 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import fiu.com.skillcourt.R;
-import fiu.com.skillcourt.ui.dashboard.MainDashboardFragment;
+import fiu.com.skillcourt.ui.custom.Step;
 import pedrocarrillo.com.materialstepperlibrary.StepLayout;
 import pedrocarrillo.com.materialstepperlibrary.interfaces.StepLayoutResult;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DynamicStepsActivityFragment extends Fragment {
+public class DynamicStepsFragment extends Fragment {
 
     private StepLayout stepLayout;
 
-    public static DynamicStepsActivityFragment newInstance() {
-        return new DynamicStepsActivityFragment();
+    public static DynamicStepsFragment newInstance() {
+        return new DynamicStepsFragment();
     }
 
     @Override
