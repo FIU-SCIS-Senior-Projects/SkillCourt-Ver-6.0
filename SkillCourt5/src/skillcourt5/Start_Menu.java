@@ -40,6 +40,8 @@ public class Start_Menu extends JFrame
     private final JRadioButton tenSecJRB;
     private final JRadioButton thirtySecJRB;
     private final JRadioButton sixtySecJRB;
+    private final JRadioButton onetwentieSecJRB;
+    private final JRadioButton ninetySecJRB;
     private final JRadioButton onePadJRB;
     private final JRadioButton twoPadJRB;
     private final JRadioButton threePadJRB;
@@ -56,6 +58,8 @@ public class Start_Menu extends JFrame
         tenSecJRB = new JRadioButton();
         thirtySecJRB = new JRadioButton();
         sixtySecJRB = new JRadioButton();
+        onetwentieSecJRB = new JRadioButton();
+        ninetySecJRB = new JRadioButton();
         onePadJRB = new JRadioButton();
         twoPadJRB = new JRadioButton();
         threePadJRB = new JRadioButton();
@@ -102,6 +106,30 @@ public class Start_Menu extends JFrame
             public void actionPerformed(ActionEvent evt)
             {
                 sixtySecJRBActionPerformed(evt);
+            }
+        });
+
+        buttonGroup2.add(ninetySecJRB);
+        ninetySecJRB.setFont(new Font("sansserif", 1, 12));
+        ninetySecJRB.setText("90 Sec");
+        ninetySecJRB.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent evt)
+            {
+                ninetySecJRBActionPerformed(evt);
+            }
+        });
+
+        buttonGroup2.add(onetwentieSecJRB);
+        onetwentieSecJRB.setFont(new Font("sansserif", 1, 12));
+        onetwentieSecJRB.setText("120 Sec");
+        onetwentieSecJRB.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent evt)
+            {
+                oneTwentieSecJRBActionPerformed(evt);
             }
         });
 
@@ -198,7 +226,11 @@ public class Start_Menu extends JFrame
                         .addGap(18, 18, 18)
                         .addComponent(thirtySecJRB)
                         .addGap(18, 18, 18)
-                        .addComponent(sixtySecJRB))
+                        .addComponent(sixtySecJRB)
+                        .addGap(18, 18, 18)
+                        .addComponent(ninetySecJRB)
+                        .addGap(18, 18, 18)
+                        .addComponent(onetwentieSecJRB))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(132, 132, 132)
                         .addComponent(submitJB, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
@@ -233,7 +265,9 @@ public class Start_Menu extends JFrame
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(tenSecJRB)
                     .addComponent(thirtySecJRB)
-                    .addComponent(sixtySecJRB))
+                    .addComponent(sixtySecJRB)
+                    .addComponent(ninetySecJRB)
+                    .addComponent(onetwentieSecJRB))
                 .addGap(37, 37, 37)
                 .addComponent(submitJB, GroupLayout.PREFERRED_SIZE, 41, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
@@ -275,7 +309,15 @@ public class Start_Menu extends JFrame
     {                                                
         time = 60;
     }
-    
+
+    private void ninetySecJRBActionPerformed(ActionEvent event) {
+        time = 90;
+    }
+
+    private void oneTwentieSecJRBActionPerformed(ActionEvent event) {
+        time = 120;
+    }
+
     /*Sets the Number of pads variable based on radio button selected.*/
     private void onePadJRBActionPerformed(ActionEvent evt)                                          
     {                                              

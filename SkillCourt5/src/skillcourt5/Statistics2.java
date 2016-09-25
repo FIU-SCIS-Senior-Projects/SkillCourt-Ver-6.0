@@ -195,7 +195,6 @@ public class Statistics2 implements TimerListener {
             if (gameInterface != null) {
                 gameInterface.onTimeObjective();
             }
-            System.out.println("Three more seconds");
         }
 
         greenLabel.setText("<html>Hits: " +
