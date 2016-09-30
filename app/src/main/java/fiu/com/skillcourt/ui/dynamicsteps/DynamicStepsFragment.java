@@ -1,11 +1,16 @@
 package fiu.com.skillcourt.ui.dynamicsteps;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.ui.custom.Step;
@@ -15,9 +20,12 @@ import pedrocarrillo.com.materialstepperlibrary.interfaces.StepLayoutResult;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DynamicStepsFragment extends Fragment {
+public class DynamicStepsFragment extends Fragment implements View.OnClickListener {
 
     private StepLayout stepLayout;
+    private Button btnSave;
+    protected FirebaseAuth mAuth;
+    protected FirebaseAuth.AuthStateListener mAuthListener;
 
     public static DynamicStepsFragment newInstance() {
         return new DynamicStepsFragment();
@@ -26,7 +34,10 @@ public class DynamicStepsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_dynamic_steps, container, false);
+        View view=inflater.inflate(R.layout.fragment_dynamic_steps, container, false);
+        btnSave = (Button) view.findViewById(R.id.btn_save) ;
+        btnSave.setOnClickListener(this);
+        return view;
     }
 
     @Override
@@ -59,5 +70,20 @@ public class DynamicStepsFragment extends Fragment {
         stepLayout.addStepView(step5);
         stepLayout.load();
 
+    }
+    @Override
+    public void onClick(View v) {
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // successfulLogin();
+                } else {
+                    //notLoggedIn();
+                }
+            }
+        };
     }
 }
