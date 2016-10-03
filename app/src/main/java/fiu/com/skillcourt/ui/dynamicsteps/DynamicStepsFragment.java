@@ -4,15 +4,25 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.manager.StepManager;
 import fiu.com.skillcourt.ui.custom.Step;
 import pedrocarrillo.com.materialstepperlibrary.StepLayout;
 import pedrocarrillo.com.materialstepperlibrary.interfaces.StepLayoutResult;
@@ -34,6 +44,7 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view=inflater.inflate(R.layout.fragment_dynamic_steps, container, false);
         btnSave = (Button) view.findViewById(R.id.btn_save) ;
         btnSave.setOnClickListener(this);
@@ -73,17 +84,24 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
     }
     @Override
     public void onClick(View v) {
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // successfulLogin();
-                } else {
-                    //notLoggedIn();
-                }
+
+        if (mAuth.getCurrentUser() != null) {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("sequences");
+            mAuth = FirebaseAuth.getInstance();
+            SparseIntArray steps = StepManager.getInstance().Steps();
+            HashMap<String, String> sequence = new HashMap<String, String>();
+            FirebaseUser user = mAuth.getCurrentUser();
+            DatabaseReference userRef = myRef.child(user.getUid());
+
+            for (int i = 0; i < steps.size(); i++) {
+                int stepNumber = steps.keyAt(i);
+                int stepValue = steps.get(stepNumber);
+                sequence.put(new Integer(stepNumber).toString(), new Integer(stepValue).toString());
             }
-        };
+            userRef.setValue(sequence);
+
+        }
     }
+
 }

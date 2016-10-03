@@ -36,4 +36,10 @@ public class StepManager {
         customSteps.delete(stepNumber);
     }
 
+    public SparseIntArray Steps ()
+    {
+        return customSteps;
+    }
+
+
 }
