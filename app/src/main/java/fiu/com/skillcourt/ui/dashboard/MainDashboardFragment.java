@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.ui.LauncherActivity;
 import fiu.com.skillcourt.ui.base.BaseFragment;
+import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
 import fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsActivity;
 import fiu.com.skillcourt.ui.startgame.StartGameActivity;
 
@@ -59,7 +60,7 @@ public class MainDashboardFragment extends BaseFragment {
         startGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StartGameActivity.class);
+                Intent intent = new Intent(getActivity(), CreateGameActivity.class);
                 startActivity(intent);
             }
         });
