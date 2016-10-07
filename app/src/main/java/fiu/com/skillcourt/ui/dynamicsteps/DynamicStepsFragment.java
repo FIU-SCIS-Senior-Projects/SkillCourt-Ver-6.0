@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,6 +36,7 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
     private StepLayout stepLayout;
     private Button btnSave;
     protected FirebaseAuth mAuth;
+    protected EditText seq_Name;
     protected FirebaseAuth.AuthStateListener mAuthListener;
 
     public static DynamicStepsFragment newInstance() {
@@ -47,6 +49,7 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
 
         View view=inflater.inflate(R.layout.fragment_dynamic_steps, container, false);
         btnSave = (Button) view.findViewById(R.id.btn_save) ;
+        seq_Name = (EditText) view.findViewById(R.id.seq_name);
         btnSave.setOnClickListener(this);
         return view;
     }
@@ -84,23 +87,28 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
     }
     @Override
     public void onClick(View v) {
-
+        if( seq_Name.getText().toString().trim().equals("")){
+            seq_Name.setError( "Sequence Name is required!" );
+        }else{
+            mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference("sequences");
-            mAuth = FirebaseAuth.getInstance();
+            //mAuth = FirebaseAuth.getInstance();
             SparseIntArray steps = StepManager.getInstance().Steps();
             HashMap<String, String> sequence = new HashMap<String, String>();
             FirebaseUser user = mAuth.getCurrentUser();
             DatabaseReference userRef = myRef.child(user.getUid());
+            //sequence.put("name", seq_Name.getText().toString().trim());
 
             for (int i = 0; i < steps.size(); i++) {
                 int stepNumber = steps.keyAt(i);
                 int stepValue = steps.get(stepNumber);
                 sequence.put(new Integer(stepNumber).toString(), new Integer(stepValue).toString());
             }
-            userRef.setValue(sequence);
+            userRef.child(seq_Name.getText().toString().trim()).setValue(sequence);
 
+        }
         }
     }
 
