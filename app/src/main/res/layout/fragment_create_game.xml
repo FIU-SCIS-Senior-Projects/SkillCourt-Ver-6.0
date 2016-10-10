@@ -83,6 +83,7 @@
                 <!--android:background="@color/background"/>-->
 
             <android.support.v7.widget.AppCompatButton
+                android:id="@+id/start_game"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

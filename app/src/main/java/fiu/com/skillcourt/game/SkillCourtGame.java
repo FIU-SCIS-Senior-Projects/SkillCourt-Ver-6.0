@@ -20,6 +20,13 @@ public class SkillCourtGame implements CountdownInterface {
     private float greenHits;
     private int gameTimeTotal = 10;
 
+    private GameMode gameMode = GameMode.BEAT_TIMER;
+
+    public enum GameMode {
+        BEAT_TIMER,
+        HIT_MODE
+    }
+
     private CountDownTimer countDownTimer;
     private SkillCourtInteractor skillCourtInteractor;
 
@@ -99,6 +106,18 @@ public class SkillCourtGame implements CountdownInterface {
     @Override
     public void onFinish() {
         skillCourtInteractor.onFinish();
+    }
+
+    public SkillCourtGame() {
+
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public void setSkillCourtInteractor(SkillCourtInteractor skillCourtInteractor) {
+        this.skillCourtInteractor = skillCourtInteractor;
     }
 
     public SkillCourtGame(SkillCourtInteractor skillCourtInteractor) {

@@ -1,6 +1,7 @@
 package fiu.com.skillcourt.ui.startgame;
 
 import fiu.com.skillcourt.game.SkillCourtGame;
+import fiu.com.skillcourt.game.SkillCourtManager;
 import fiu.com.skillcourt.interfaces.SkillCourtInteractor;
 
 /**
@@ -14,7 +15,8 @@ public class StartGamePresenter implements SkillCourtInteractor {
 
     public StartGamePresenter(StartGameView view) {
         this.view = view;
-        skillCourtGame = new SkillCourtGame(this);
+        skillCourtGame = SkillCourtManager.getInstance().getGame();
+        skillCourtGame.setSkillCourtInteractor(this);
     }
 
     public void startGame() {

@@ -19,6 +19,7 @@
     <string name="time">Time</string>
     <string name="game_mode">Game mode</string>
     <string name="start_game">Start game</string>
+    <string name="pick_game_mode">Select a game mode</string>
 
     <string-array name="game_modes">
         <item>Beat Timer</item>
