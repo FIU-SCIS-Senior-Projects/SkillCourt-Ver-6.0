@@ -1,9 +1,11 @@
 package fiu.com.skillcourt.ui.dynamicsteps;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,8 @@ import java.util.Hashtable;
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.manager.StepManager;
 import fiu.com.skillcourt.ui.custom.Step;
+import fiu.com.skillcourt.ui.dashboard.MainDashboardActivity;
+import fiu.com.skillcourt.ui.startgame.StartGameActivity;
 import pedrocarrillo.com.materialstepperlibrary.StepLayout;
 import pedrocarrillo.com.materialstepperlibrary.interfaces.StepLayoutResult;
 
@@ -107,7 +111,9 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
                 sequence.put(new Integer(stepNumber).toString(), new Integer(stepValue).toString());
             }
             userRef.child(seq_Name.getText().toString().trim()).setValue(sequence);
-
+            //Intent i=new Intent(MainActivity.this, MainActivity2.class);
+            Intent intent = new Intent(getActivity(), MainDashboardActivity.class);
+            startActivity(intent);
         }
         }
     }
