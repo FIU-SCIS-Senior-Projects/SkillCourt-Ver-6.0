@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,8 +40,10 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
 
     private StepLayout stepLayout;
     private Button btnSave;
+    private Button btn_continue;
     protected FirebaseAuth mAuth;
     protected EditText seq_Name;
+    protected NumberPicker np;
     protected FirebaseAuth.AuthStateListener mAuthListener;
 
     public static DynamicStepsFragment newInstance() {
@@ -54,7 +57,10 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
         View view=inflater.inflate(R.layout.fragment_dynamic_steps, container, false);
         btnSave = (Button) view.findViewById(R.id.btn_save) ;
         seq_Name = (EditText) view.findViewById(R.id.seq_name);
+        btn_continue = (Button) view.findViewById(R.id.btn_continue) ;
+        np = (NumberPicker) view.findViewById(R.id.np) ;
         btnSave.setOnClickListener(this);
+        btn_continue.setOnClickListener(this);
         return view;
     }
 
@@ -74,47 +80,64 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
 
             }
         });
+        NumberPicker np = (NumberPicker) view.findViewById(R.id.np);
+        np.setMaxValue(100);
+        np.setMinValue(0);
+        //Step step1 = new Step(getContext());
+        //Step step2 = new Step(getContext());
+        //Step step3 = new Step(getContext());
+        //Step step4 = new Step(getContext());
+        //Step step5 = new Step(getContext());
 
-        Step step1 = new Step(getContext());
-        Step step2 = new Step(getContext());
-        Step step3 = new Step(getContext());
-        Step step4 = new Step(getContext());
-        Step step5 = new Step(getContext());
-
-        stepLayout.addStepView(step1);
-        stepLayout.addStepView(step2);
-        stepLayout.addStepView(step3);
-        stepLayout.addStepView(step4);
-        stepLayout.addStepView(step5);
-        stepLayout.load();
+        //stepLayout.addStepView(step1);
+        //stepLayout.addStepView(step2);
+        //stepLayout.addStepView(step3);
+        //stepLayout.addStepView(step4);
+        //stepLayout.addStepView(step5);
+        //stepLayout.load();
 
     }
+
     @Override
     public void onClick(View v) {
-        if( seq_Name.getText().toString().trim().equals("")){
-            seq_Name.setError( "Sequence Name is required!" );
-        }else{
-            mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("sequences");
-            //mAuth = FirebaseAuth.getInstance();
-            SparseIntArray steps = StepManager.getInstance().Steps();
-            HashMap<String, String> sequence = new HashMap<String, String>();
-            FirebaseUser user = mAuth.getCurrentUser();
-            DatabaseReference userRef = myRef.child(user.getUid());
-            //sequence.put("name", seq_Name.getText().toString().trim());
+        int numSteps=0;
+        switch(v.getId()){
+            case R.id.btn_continue:
+                btn_continue.setVisibility(View.GONE);
+                btnSave.setVisibility(View.VISIBLE);
+                seq_Name.setVisibility(View.VISIBLE);
+                np.setVisibility(View.GONE);
+                numSteps=np.getValue();
+                for (int i = 0; i < numSteps; i++) {
+                    Step step = new Step(getContext());
+                    stepLayout.addStepView(step);
 
-            for (int i = 0; i < steps.size(); i++) {
-                int stepNumber = steps.keyAt(i);
-                int stepValue = steps.get(stepNumber);
-                sequence.put(new Integer(stepNumber).toString(), new Integer(stepValue).toString());
-            }
-            userRef.child(seq_Name.getText().toString().trim()).setValue(sequence);
-            //Intent i=new Intent(MainActivity.this, MainActivity2.class);
-            Intent intent = new Intent(getActivity(), MainDashboardActivity.class);
-            startActivity(intent);
-        }
+                }
+                stepLayout.load();
+                break;
+            case R.id.btn_save:
+                if( seq_Name.getText().toString().trim().equals("")){
+                    seq_Name.setError( "Sequence Name is required!" );
+                }else{
+                    mAuth = FirebaseAuth.getInstance();
+                if (mAuth.getCurrentUser() != null) {
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    DatabaseReference myRef = database.getReference(user.getUid());
+                    DatabaseReference mySeq=myRef.child("sequences");
+                    SparseIntArray steps = StepManager.getInstance().Steps();
+                    HashMap<String, String> sequence = new HashMap<String, String>();
+                    sequence.clear();
+                    for (int i = 0; i < steps.size(); i++) {
+                        int stepNumber = steps.keyAt(i);
+                        int stepValue = steps.get(stepNumber);
+                        sequence.put(new Integer(stepNumber).toString(), new Integer(stepValue).toString());
+                    }
+                    mySeq.child(seq_Name.getText().toString().trim()).setValue(sequence);
+                    Intent intent = new Intent(getActivity(), MainDashboardActivity.class);
+                    startActivity(intent);
+                }
+                }break;
         }
     }
 
