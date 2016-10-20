@@ -24,4 +24,5 @@ public class CountDownTimer extends android.os.CountDownTimer {
     public void onFinish() {
         gameTimerViewInteractor.onFinish();
     }
+
 }

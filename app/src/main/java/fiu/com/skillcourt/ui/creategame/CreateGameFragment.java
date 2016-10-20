@@ -14,18 +14,20 @@ import android.widget.TimePicker;
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.game.SkillCourtGame;
 import fiu.com.skillcourt.game.SkillCourtManager;
-import fiu.com.skillcourt.ui.base.BaseFragment;
+import fiu.com.skillcourt.ui.base.ArduinosStartCommunicationFragment;
+import fiu.com.skillcourt.ui.base.Utils;
 import fiu.com.skillcourt.ui.custom.GameModePickerFragment;
 import fiu.com.skillcourt.ui.custom.TimePickerFragment;
 import fiu.com.skillcourt.ui.startgame.StartGameActivity;
 
-public class CreateGameFragment extends BaseFragment implements TimePickerDialog.OnTimeSetListener, DialogInterface.OnClickListener {
+public class CreateGameFragment extends ArduinosStartCommunicationFragment implements TimePickerDialog.OnTimeSetListener, DialogInterface.OnClickListener {
 
     Button btnTime, btnGameMode, btnStartGame;
-
     TimePickerFragment timePickerFragment = new TimePickerFragment();
-
     GameModePickerFragment gameModePickerFragment = new GameModePickerFragment();
+
+    private int time = -1;
+    private SkillCourtGame.GameMode selectedGameMode;
 
     public static CreateGameFragment newInstance() {
         return new CreateGameFragment();
@@ -44,7 +46,7 @@ public class CreateGameFragment extends BaseFragment implements TimePickerDialog
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        SkillCourtManager.getInstance().getGame().setGameTimeTotal(i*60+i1);
+        time = i*60+i1;
         btnTime.setText(String.format("%02d:%02d",i,+i1));
     }
 
@@ -74,11 +76,21 @@ public class CreateGameFragment extends BaseFragment implements TimePickerDialog
         btnStartGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), StartGameActivity.class);
-                startActivity(intent);
+                if (isValid()) {
+                    SkillCourtManager.getInstance().getGame().setGameTimeTotal(time);
+                    SkillCourtManager.getInstance().getGame().setGameMode(selectedGameMode);
+                    Intent intent = new Intent(getActivity(), StartGameActivity.class);
+                    startActivity(intent);
+                } else {
+                    Utils.creatSimpleDialog(getActivity(), "Please fill all the fields").show();
+                }
             }
         });
 
+    }
+
+    public boolean isValid() {
+        return time != -1 && selectedGameMode != null;
     }
 
     @Override
@@ -91,7 +103,7 @@ public class CreateGameFragment extends BaseFragment implements TimePickerDialog
             gameMode = SkillCourtGame.GameMode.HIT_MODE;
             btnGameMode.setText("Hit mode");
         }
-        SkillCourtManager.getInstance().getGame().setGameMode(gameMode);
+        selectedGameMode = gameMode;
     }
 
 }

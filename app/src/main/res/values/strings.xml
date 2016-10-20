@@ -20,6 +20,7 @@
     <string name="game_mode">Game mode</string>
     <string name="start_game">Start game</string>
     <string name="pick_game_mode">Select a game mode</string>
+    <string name="verifying_connection_to_arduinos">Verifying connection to arduinos</string>
 
     <string-array name="game_modes">
         <item>Beat Timer</item>

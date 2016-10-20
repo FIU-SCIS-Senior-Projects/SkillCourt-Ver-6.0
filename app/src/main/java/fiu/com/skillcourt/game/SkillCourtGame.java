@@ -20,7 +20,9 @@ public class SkillCourtGame implements CountdownInterface {
     private float greenHits;
     private int gameTimeTotal = 10;
 
-    private GameMode gameMode = GameMode.BEAT_TIMER;
+    long currentTime = gameTimeTotal * 1000;
+
+    private GameMode gameMode = GameMode.HIT_MODE;
 
     public enum GameMode {
         BEAT_TIMER,
@@ -66,8 +68,37 @@ public class SkillCourtGame implements CountdownInterface {
         totalHits++;
     }
 
+    public int getAccuracy() {
+        return Math.round((greenHits/totalHits) * 100);
+    }
+
+    public int getGreenPad() {
+        return greenPad;
+    }
+
+    public int getRedPad() {
+        return redPad;
+    }
+
+    public float getTotalHits() {
+        return totalHits;
+    }
+
+    public int getTimeObjective() {
+        return timeObjective;
+    }
+
+    public float getGreenHits() {
+        return greenHits;
+    }
+
+    public long getCurrentTime() {
+        return currentTime;
+    }
+
     public void setGameTimeTotal(int seconds) {
         gameTimeTotal = seconds;
+        currentTime = gameTimeTotal * 1000;
     }
 
     public int getGameTimeTotal() {
@@ -80,21 +111,36 @@ public class SkillCourtGame implements CountdownInterface {
 
     public void startGame() {
         isRunning = true;
-        countDownTimer = new CountDownTimer(gameTimeTotal * 1000, 1, this);
+        countDownTimer = new CountDownTimer(currentTime, 1, this);
         countDownTimer.start();
     }
 
-    private void restartGame() {
+    public void cancelGame() {
+        isRunning = false;
+        countDownTimer.cancel();
+    }
+
+    public void pause() {
+        cancelGame();
+    }
+
+    public void resume() {
+        startGame();
+    }
+
+    public void restartGame() {
         score = 0;
         greenPad = 0;
         redPad = 0;
         totalHits = 0;
         greenHits = 0;
+        currentTime = gameTimeTotal;
         startGame();
     }
 
     @Override
     public void onTick(long millisUntilFinished) {
+        currentTime = millisUntilFinished;
         int second = Math.round((float)millisUntilFinished / 1000.0f);
         long minutes = (second / 60);
         long seconds = second % 60;
@@ -105,6 +151,7 @@ public class SkillCourtGame implements CountdownInterface {
 
     @Override
     public void onFinish() {
+        isRunning = false;
         skillCourtInteractor.onFinish();
     }
 
@@ -114,6 +161,10 @@ public class SkillCourtGame implements CountdownInterface {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
     }
 
     public void setSkillCourtInteractor(SkillCourtInteractor skillCourtInteractor) {

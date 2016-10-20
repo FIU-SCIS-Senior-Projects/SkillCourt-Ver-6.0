@@ -46,17 +46,11 @@ public class DynamicStepsFragment extends Fragment {
             }
         });
 
-        Step step1 = new Step(getContext());
-        Step step2 = new Step(getContext());
-        Step step3 = new Step(getContext());
-        Step step4 = new Step(getContext());
-        Step step5 = new Step(getContext());
+        int numSteps = 9;
 
-        stepLayout.addStepView(step1);
-        stepLayout.addStepView(step2);
-        stepLayout.addStepView(step3);
-        stepLayout.addStepView(step4);
-        stepLayout.addStepView(step5);
+        for (int i = 0; i< numSteps; i++) {
+            stepLayout.addStepView(new Step(getContext()));
+        }
         stepLayout.load();
 
     }

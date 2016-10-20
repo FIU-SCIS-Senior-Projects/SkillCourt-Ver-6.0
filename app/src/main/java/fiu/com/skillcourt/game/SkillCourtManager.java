@@ -21,4 +21,28 @@ public class SkillCourtManager {
         return game;
     }
 
+    //Game related methods
+    public void newGame() {
+        game = new SkillCourtGame();
+    }
+
+    public void restartGame() {
+        game.restartGame();
+    }
+
+    public void cancelGame() {game.cancelGame();}
+
+    public void addGreenPoint() {
+        game.addPoint(1);
+        game.addGreen(1);
+        game.totalHit();
+        game.greenHit();
+    }
+
+    public void addRedPoint() {
+        game.addRed(1);
+        game.subtractPoint(1);
+        game.totalHit();
+    }
+
 }
