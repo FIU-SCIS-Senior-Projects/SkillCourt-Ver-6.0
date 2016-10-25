@@ -23,6 +23,28 @@
             android:id="@+id/stepLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+        <NumberPicker android:id="@+id/np"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="100dip"/>
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClick"
+            android:text="Continue"/>
+        <EditText
+            android:id="@+id/seq_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="text" />
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Save"/>
 
     </LinearLayout>
 
