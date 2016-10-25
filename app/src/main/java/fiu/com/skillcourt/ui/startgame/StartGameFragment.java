@@ -18,6 +18,10 @@ public class StartGameFragment extends Fragment implements StartGameView {
 
     private TextView tvTimer;
     private ProgressBar progressBar;
+    private TextView tvHits;
+    private TextView tvGreenHits;
+    private TextView tvScore;
+    private TextView tvAccuracy;
 
     StartGamePresenter startGamePresenter;
 
@@ -41,8 +45,30 @@ public class StartGameFragment extends Fragment implements StartGameView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvTimer = (TextView)view.findViewById(R.id.tvTimer);
+        tvAccuracy = (TextView)view.findViewById(R.id.tv_accuracy);
+        tvGreenHits = (TextView)view.findViewById(R.id.tv_green_hits);
+        tvHits = (TextView)view.findViewById(R.id.tv_hits);
+        tvScore = (TextView)view.findViewById(R.id.tv_score);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
         startGamePresenter.startGame();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        startGamePresenter.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        startGamePresenter.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        startGamePresenter.cancelGame();
     }
 
     @Override
@@ -58,5 +84,18 @@ public class StartGameFragment extends Fragment implements StartGameView {
     @Override
     public void changeProgressView(long seconds) {
         progressBar.setProgress((int)seconds);
+    }
+
+    @Override
+    public void updateResult(final float totalHits,final float greenHits,final int score,final int accuracy) {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvHits.setText(String.valueOf(totalHits));
+                tvGreenHits.setText(String.valueOf(greenHits));
+                tvScore.setText(String.valueOf(score));
+                tvAccuracy.setText(String.valueOf(accuracy) + " %");
+            }
+        });
     }
 }
