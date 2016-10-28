@@ -62,7 +62,7 @@ public class StartGameFragment extends Fragment implements StartGameView {
     @Override
     public void onResume() {
         super.onResume();
-        startGamePresenter.onResume();
+        startGamePresenter.onResume(this);
     }
 
     @Override

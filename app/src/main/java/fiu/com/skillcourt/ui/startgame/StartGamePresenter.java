@@ -77,7 +77,9 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
             Log.e("points", " score " + SkillCourtManager.getInstance().getGame().getScore());
             Log.e("points", "acc "+ SkillCourtManager.getInstance().getGame().getAccuracy());
             SkillCourtGame sk = SkillCourtManager.getInstance().getGame();
-            view.updateResult(sk.getTotalHits(), sk.getGreenHits(), sk.getScore(), sk.getAccuracy());
+            if (view != null) {
+                view.updateResult(sk.getTotalHits(), sk.getGreenHits(), sk.getScore(), sk.getAccuracy());
+            }
             updateArduinosStatus();
         }
     }
@@ -96,10 +98,17 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
     }
 
     public void onPause() {
+        view = null;
         skillCourtGame.pause();
     }
 
-    public void onResume() {
+    public void onStop() {
+        view = null;
+        skillCourtGame.pause();
+    }
+
+    public void onResume(StartGameView view) {
+        this.view = view;
         skillCourtGame.resume();
     }
 

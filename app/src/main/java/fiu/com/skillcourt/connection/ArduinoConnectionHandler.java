@@ -64,7 +64,7 @@ public class ArduinoConnectionHandler implements Runnable {
     }
 
     public void disconnect() {
-        if (socket != null) {
+        if (socket != null && socket.isConnected()) {
             setStatus(Arduino.TYPE_LIGHT.DISCONNECTED);
             connected = false;
             try {
