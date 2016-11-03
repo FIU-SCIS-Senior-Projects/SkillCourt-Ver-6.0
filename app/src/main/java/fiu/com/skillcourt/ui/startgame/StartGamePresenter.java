@@ -62,12 +62,14 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onTimeObjective() {
-
+        if(skillCourtGame.getGameMode() == SkillCourtGame.GameMode.BEAT_TIMER) {
+            updateArduinosStatus();
+        }
     }
 
     @Override
     public void onMessageReceived(Arduino.TYPE_LIGHT currentStatus, String message) {
-        if(skillCourtGame.getGameMode() == SkillCourtGame.GameMode.HIT_MODE && skillCourtGame.isRunning()) {
+        if(skillCourtGame.isRunning()) {
             if (currentStatus == Arduino.TYPE_LIGHT.GREEN) {
                 SkillCourtManager.getInstance().addGreenPoint();
             } else {
@@ -80,7 +82,9 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
             if (view != null) {
                 view.updateResult(sk.getTotalHits(), sk.getGreenHits(), sk.getScore(), sk.getAccuracy());
             }
-            updateArduinosStatus();
+            if (skillCourtGame.getGameMode() == SkillCourtGame.GameMode.HIT_MODE) {
+                updateArduinosStatus();
+            }
         }
     }
 

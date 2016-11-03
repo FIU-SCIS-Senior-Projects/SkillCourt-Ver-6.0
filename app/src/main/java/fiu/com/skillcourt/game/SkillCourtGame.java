@@ -144,6 +144,11 @@ public class SkillCourtGame implements CountdownInterface {
         int second = Math.round((float)millisUntilFinished / 1000.0f);
         long minutes = (second / 60);
         long seconds = second % 60;
+        if (gameMode == GameMode.BEAT_TIMER) {
+            if (second % timeObjective == 0) {
+                skillCourtInteractor.onTimeObjective();
+            }
+        }
         String time = String.format("%02d:%02d", minutes, seconds);
         skillCourtInteractor.onSecond(time, second);
         skillCourtInteractor.onMillisecond(Math.round((float)millisUntilFinished));
@@ -161,6 +166,10 @@ public class SkillCourtGame implements CountdownInterface {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
+    }
+
+    public void setTimeObjective(int timeObjective) {
+        this.timeObjective = timeObjective;
     }
 
     public GameMode getGameMode() {

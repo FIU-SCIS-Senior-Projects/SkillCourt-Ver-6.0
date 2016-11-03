@@ -47,13 +47,13 @@ public class ArduinoManager implements ArduinoConnectionListener {
 
     public void startConnection() {
 
-        String host = "192.168.43.47";
+        String host = "192.168.43.91";
         int port = 23;
 
         Arduino first = new Arduino(host, port, Arduino.TYPE_LIGHT.START);
         arduinos.add(new ArduinoConnectionHandler(first, this));
 
-        String host2 = "192.168.43.109";
+        String host2 = "192.168.43.241";
         int port2 = 23;
         Arduino second = new Arduino(host2, port2, Arduino.TYPE_LIGHT.START);
         arduinos.add(new ArduinoConnectionHandler(second, this));

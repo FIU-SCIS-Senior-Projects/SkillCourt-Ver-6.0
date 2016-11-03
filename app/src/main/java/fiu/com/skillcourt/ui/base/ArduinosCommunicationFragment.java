@@ -45,18 +45,17 @@ public class ArduinosCommunicationFragment extends BaseFragment {
     protected void showErrorDialog(String error) {
         if (!errorThrown) {
             errorThrown = true;
-            //TODO: UNCOMMENT
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//            builder.setMessage(error);
-//            builder.setCancelable(false);
-//            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                    terminateActivity();
-//                }
-//            });
-//            AlertDialog dialog = builder.create();
-//            dialog.show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(error);
+            builder.setCancelable(false);
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    terminateActivity();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
     }
 
