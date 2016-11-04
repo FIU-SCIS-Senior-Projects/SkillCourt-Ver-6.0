@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Hashtable;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.game.Sequences;
 import fiu.com.skillcourt.manager.StepManager;
 import fiu.com.skillcourt.ui.custom.Step;
 import fiu.com.skillcourt.ui.dashboard.MainDashboardActivity;
@@ -121,19 +122,33 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
                 }else{
                     mAuth = FirebaseAuth.getInstance();
                 if (mAuth.getCurrentUser() != null) {
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    FirebaseUser user = mAuth.getCurrentUser();
-                    DatabaseReference myRef = database.getReference(user.getUid());
-                    DatabaseReference mySeq=myRef.child("sequences");
                     SparseIntArray steps = StepManager.getInstance().Steps();
                     HashMap<String, String> sequence = new HashMap<String, String>();
                     sequence.clear();
+
                     for (int i = 0; i < steps.size(); i++) {
                         int stepNumber = steps.keyAt(i);
                         int stepValue = steps.get(stepNumber);
                         sequence.put(new Integer(stepNumber).toString(), new Integer(stepValue).toString());
                     }
-                    mySeq.child(seq_Name.getText().toString().trim()).setValue(sequence);
+
+                    //save sequence outside user
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference sequences =database.getReference("sequences");
+                    DatabaseReference myKey=sequences.push();
+                    Sequences mysequence=new Sequences(seq_Name.getText().toString().trim(),sequence);
+                    DatabaseReference newSeq=sequences.child(myKey.getKey());
+                    newSeq.setValue(mysequence);
+
+
+                    //save sequence ID inside user
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    DatabaseReference myRef = database.getReference(user.getUid());
+                    DatabaseReference mySeq=myRef.child("sequences");
+                    DatabaseReference saveID=mySeq.child(myKey.getKey());
+                    saveID.setValue(myKey.getKey());
+
+                    steps.clear();
                     Intent intent = new Intent(getActivity(), MainDashboardActivity.class);
                     startActivity(intent);
                 }
