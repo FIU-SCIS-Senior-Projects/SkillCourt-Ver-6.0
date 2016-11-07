@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,11 +39,11 @@ import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
 import fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsActivity;
 import fiu.com.skillcourt.ui.startgame.StartGameActivity;
 
-public class MainDashboardFragment extends BaseFragment {
+public class MainDashboardFragment extends BaseFragment implements OnItemSelectedListener {
 
     HashMap myData;
     Spinner spinner;
-    ArrayList<String> mySequences=new ArrayList<String>();
+    ArrayList<String> mySequences = new ArrayList<String>();
     HashMap globalSequences=new HashMap();
     ArrayAdapter<String> spinnerArrayAdapter;
 
@@ -62,7 +63,14 @@ public class MainDashboardFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        return inflater.inflate(R.layout.fragment_main_dashboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_dashboard, container, false);
+        spinner = (Spinner)view.findViewById(R.id.sequence_spinner);
+
+        spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, mySequences);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item );
+        spinner.setAdapter(spinnerArrayAdapter);
+        spinner.setOnItemSelectedListener(this);
+        return view;
     }
 
     @Override
@@ -113,7 +121,7 @@ public class MainDashboardFragment extends BaseFragment {
                     mySequences.add(item.get("name").toString());
                     entries.remove();
                 }
-
+                spinnerArrayAdapter.notifyDataSetChanged();
             }
 
 
@@ -135,25 +143,7 @@ public class MainDashboardFragment extends BaseFragment {
 
             }
         });
-        spinner = (Spinner) getView().findViewById(R.id.sequence_spinner);
-        spinnerArrayAdapter =
-                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,mySequences);
-        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_item );
-        spinner.setAdapter(spinnerArrayAdapter);
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
-                ((TextView) parent.getChildAt(0)).setTextSize(5);
-                int provider = spinner.getSelectedItemPosition();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        spinnerArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -175,6 +165,15 @@ public class MainDashboardFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        ((TextView) adapterView.getChildAt(0)).setTextColor(Color.BLUE);
+        ((TextView) adapterView.getChildAt(0)).setTextSize(5);
+        int provider = spinner.getSelectedItemPosition();
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
 }
