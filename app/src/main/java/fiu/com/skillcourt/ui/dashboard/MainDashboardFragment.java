@@ -1,18 +1,35 @@
 package fiu.com.skillcourt.ui.dashboard;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresPermission;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.ui.LauncherActivity;
@@ -23,9 +40,17 @@ import fiu.com.skillcourt.ui.startgame.StartGameActivity;
 
 public class MainDashboardFragment extends BaseFragment {
 
+    HashMap myData;
+    Spinner spinner;
+    ArrayList<String> mySequences=new ArrayList<String>();
+    HashMap globalSequences=new HashMap();
+    ArrayAdapter<String> spinnerArrayAdapter;
+
     public static MainDashboardFragment newInstance() {
         return new MainDashboardFragment();
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +61,7 @@ public class MainDashboardFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
         return inflater.inflate(R.layout.fragment_main_dashboard, container, false);
     }
 
@@ -64,6 +90,70 @@ public class MainDashboardFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
+
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        DatabaseReference myRef = database.getReference(user.getUid());
+        final DatabaseReference mySeq=myRef.child("sequences");
+
+        mySeq.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                myData=(HashMap) dataSnapshot.getValue();
+                Iterator entries = myData.entrySet().iterator();
+                mySequences.clear();
+                mySequences.add("None");
+                while (entries.hasNext()) {
+                    Map.Entry entry = (Map.Entry) entries.next();
+                    String key = entry.getValue().toString();
+                    HashMap item=(HashMap)globalSequences.get(key);
+                    mySequences.add(item.get("name").toString());
+                    entries.remove();
+                }
+
+            }
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        DatabaseReference sequences =database.getReference("sequences");
+        sequences.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                globalSequences=(HashMap)dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        spinner = (Spinner) getView().findViewById(R.id.sequence_spinner);
+        spinnerArrayAdapter =
+                new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item,mySequences);
+        spinnerArrayAdapter.setDropDownViewResource( android.R.layout.simple_spinner_item );
+        spinner.setAdapter(spinnerArrayAdapter);
+        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ((TextView) parent.getChildAt(0)).setTextColor(Color.BLUE);
+                ((TextView) parent.getChildAt(0)).setTextSize(5);
+                int provider = spinner.getSelectedItemPosition();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinnerArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
