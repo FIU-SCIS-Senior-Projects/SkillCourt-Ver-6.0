@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import fiu.com.skillcourt.R;
 
 /**
@@ -26,13 +28,16 @@ public class StartGameFragment extends Fragment implements StartGameView {
     StartGamePresenter startGamePresenter;
 
     public static StartGameFragment newInstance() {
+        StartGameFragment startGameFragment = new StartGameFragment();
+//        Bundle bundle = new Bundle();
+//        bundle.
         return new StartGameFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startGamePresenter = new StartGamePresenter(this);
+        startGamePresenter = new StartGamePresenter(this, new HashMap<String, String>());
     }
 
     @Override
