@@ -55,7 +55,25 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
         }
     }
 
+    public void playAgain() {
+        skillCourtGame.restartGame();
+        startGame();
+    }
+
+    public void newGame() {
+
+    }
+
+    public void saveAndPlayAgain() {
+
+    }
+
+    public void saveAndNewGame() {
+
+    }
+
     public void startGame() {
+        view.setupInitGame();
         skillCourtGame.startGame();
         updateArduinosStatus();
         view.setProgressTotal(skillCourtGame.getGameTimeTotal() * 1000);
@@ -73,6 +91,7 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onTimeObjective() {
+        Log.e("time", "onTimeObjective");
         if(skillCourtGame.getGameMode() == SkillCourtGame.GameMode.BEAT_TIMER) {
             updateArduinosStatus();
         }
@@ -145,11 +164,22 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onFinish() {
-        for (int i = 0; i < randomNumbers.size(); i++) {
-            arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.FINISH);
+        view.setupFinishGame();
+        if (arduinoManager.getArduinos().size() > 1) {
+            for (int i = 0; i < randomNumbers.size(); i++) {
+                arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.FINISH);
+            }
+        } else {
+            arduinoManager.getArduinos().get(0).setStatus(Arduino.TYPE_LIGHT.FINISH);
         }
+        gameFisnished();
         view.setTimerText("TIME's up!");
     }
+
+    private void gameFisnished() {
+
+    }
+
 
     public void cancelGame() {
         skillCourtGame.cancelGame();

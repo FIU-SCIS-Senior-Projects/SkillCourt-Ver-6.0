@@ -3,6 +3,7 @@ package fiu.com.skillcourt.ui.dashboard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,9 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.connection.Arduino;
+import fiu.com.skillcourt.connection.ArduinoManager;
+import fiu.com.skillcourt.interfaces.ArduinoSkillCourtInteractor;
 import fiu.com.skillcourt.ui.LauncherActivity;
 import fiu.com.skillcourt.ui.base.BaseFragment;
 import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
@@ -42,7 +46,6 @@ public class MainDashboardFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         if (email != null) {
             TextView tvWelcome = (TextView)getView().findViewById(R.id.tv_welcome);

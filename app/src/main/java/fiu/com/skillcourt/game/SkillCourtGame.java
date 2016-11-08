@@ -145,9 +145,9 @@ public class SkillCourtGame implements CountdownInterface {
         long minutes = (second / 60);
         long seconds = second % 60;
         if (gameMode == GameMode.BEAT_TIMER) {
-            if (second % timeObjective == 0) {
-                skillCourtInteractor.onTimeObjective();
-            }
+//            if (seconds % timeObjective == 0) {
+//                skillCourtInteractor.onTimeObjective();
+//            }
         }
         String time = String.format("%02d:%02d", minutes, seconds);
         skillCourtInteractor.onSecond(time, second);

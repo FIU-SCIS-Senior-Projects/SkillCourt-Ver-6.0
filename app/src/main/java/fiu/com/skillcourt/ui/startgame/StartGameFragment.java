@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -16,7 +19,7 @@ import fiu.com.skillcourt.R;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class StartGameFragment extends Fragment implements StartGameView {
+public class StartGameFragment extends Fragment implements StartGameView, View.OnClickListener{
 
     private TextView tvTimer;
     private ProgressBar progressBar;
@@ -24,6 +27,8 @@ public class StartGameFragment extends Fragment implements StartGameView {
     private TextView tvGreenHits;
     private TextView tvScore;
     private TextView tvAccuracy;
+    private LinearLayout btnContainer, tvContainer;
+    private RelativeLayout timerContainer;
 
     StartGamePresenter startGamePresenter;
 
@@ -55,6 +60,18 @@ public class StartGameFragment extends Fragment implements StartGameView {
         tvHits = (TextView)view.findViewById(R.id.tv_hits);
         tvScore = (TextView)view.findViewById(R.id.tv_score);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
+        btnContainer = (LinearLayout)view.findViewById(R.id.btn_containers);
+        tvContainer = (LinearLayout)view.findViewById(R.id.tv_container);
+        timerContainer = (RelativeLayout)view.findViewById(R.id.timer_container);
+        Button btnNewGame, btnSaveAndPlay, btnPlayAgain, btnSaveAndNewGame;
+        btnNewGame = (Button) view.findViewById(R.id.btn_new_game);
+        btnPlayAgain = (Button) view.findViewById(R.id.btn_play_again);
+        btnSaveAndPlay = (Button) view.findViewById(R.id.btn_save_play_again);
+        btnSaveAndNewGame = (Button) view.findViewById(R.id.btn_save_and_new_game);
+        btnNewGame.setOnClickListener(this);
+        btnPlayAgain.setOnClickListener(this);
+        btnSaveAndPlay.setOnClickListener(this);
+        btnSaveAndNewGame.setOnClickListener(this);
         startGamePresenter.startGame();
     }
 
@@ -102,5 +119,32 @@ public class StartGameFragment extends Fragment implements StartGameView {
                 tvAccuracy.setText(String.valueOf(accuracy) + " %");
             }
         });
+    }
+
+    @Override
+    public void setupInitGame() {
+        timerContainer.setVisibility(View.VISIBLE);
+        btnContainer.setVisibility(View.GONE);
+        tvContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setupFinishGame() {
+        timerContainer.setVisibility(View.GONE);
+        btnContainer.setVisibility(View.VISIBLE);
+        tvContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_new_game) {
+
+        } else if (view.getId() == R.id.btn_save_and_new_game) {
+
+        } else if (view.getId() == R.id.btn_save_play_again) {
+
+        } else if (view.getId() == R.id.btn_play_again) {
+            startGamePresenter.playAgain();
+        }
     }
 }
