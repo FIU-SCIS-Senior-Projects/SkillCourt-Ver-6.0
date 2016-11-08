@@ -90,6 +90,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
                 if (time <= 0) {
                     Snackbar.make(getView(), "Please pick a time first", Snackbar.LENGTH_SHORT).show();
                 } else {
+                    if (frequencyTime != -1) numberPickerFragment.setValue(frequencyTime);
                     numberPickerFragment.show(getChildFragmentManager(), "number_picker");
                 }
             }
@@ -147,6 +148,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
 
     @Override
     public void onNumberSelected(int number) {
+        btnTimeObjective.setText(String.valueOf(number));
         frequencyTime = number;
     }
 }

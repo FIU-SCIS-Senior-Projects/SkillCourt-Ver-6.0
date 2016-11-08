@@ -56,6 +56,10 @@ public class NumberPickerFragment extends DialogFragment {
         this.max = max;
     }
 
+    public void setValue(int value) {
+        numberPicker.setValue(value);
+    }
+
     public interface NumericDialogListener {
         void onNumberSelected(int number);
     }
