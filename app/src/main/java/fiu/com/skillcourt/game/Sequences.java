@@ -17,4 +17,5 @@ public class Sequences {
     }
     public HashMap<String, String> Sequence(){return sequence;}
     public String Name(){return name;}
+
 }

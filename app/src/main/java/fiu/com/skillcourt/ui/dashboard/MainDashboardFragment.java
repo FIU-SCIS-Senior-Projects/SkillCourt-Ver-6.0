@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.game.Sequences;
 import fiu.com.skillcourt.ui.LauncherActivity;
 import fiu.com.skillcourt.ui.base.BaseFragment;
 import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
@@ -43,6 +44,8 @@ public class MainDashboardFragment extends BaseFragment implements OnItemSelecte
 
     HashMap myData;
     Spinner spinner;
+    HashMap<String,String> spinnerMap = new HashMap<String, String>();
+    protected FirebaseAuth mAuth;
     ArrayList<String> mySequences = new ArrayList<String>();
     HashMap globalSequences=new HashMap();
     ArrayAdapter<String> spinnerArrayAdapter;
@@ -111,14 +114,17 @@ public class MainDashboardFragment extends BaseFragment implements OnItemSelecte
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 myData=(HashMap) dataSnapshot.getValue();
+                if(myData==null) return;
                 Iterator entries = myData.entrySet().iterator();
                 mySequences.clear();
-                mySequences.add("None");
+                mySequences.add("");
                 while (entries.hasNext()) {
                     Map.Entry entry = (Map.Entry) entries.next();
-                    String key = entry.getValue().toString();
+                    String key = entry.getKey().toString();
                     HashMap item=(HashMap)globalSequences.get(key);
+                    if(item==null) continue;
                     mySequences.add(item.get("name").toString());
+                    spinnerMap.put(item.get("name").toString(),key);
                     entries.remove();
                 }
                 spinnerArrayAdapter.notifyDataSetChanged();
@@ -167,9 +173,34 @@ public class MainDashboardFragment extends BaseFragment implements OnItemSelecte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        ((TextView) adapterView.getChildAt(0)).setTextColor(Color.BLUE);
-        ((TextView) adapterView.getChildAt(0)).setTextSize(5);
-        int provider = spinner.getSelectedItemPosition();
+        Object sequence = spinner.getSelectedItem();
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        DatabaseReference myRef = database.getReference(user.getUid());
+        DatabaseReference mySeq=myRef.child("sequences");
+        if(sequence.toString()==""){
+            for(String seq:mySequences)
+            {
+                if(seq=="") continue;
+                String otherid = spinnerMap.get(seq);
+                DatabaseReference otherRef=mySeq.child(otherid);
+                otherRef.setValue("");
+            }
+            return;
+        }
+        String id = spinnerMap.get(sequence.toString());
+
+        DatabaseReference saveID=mySeq.child(id);
+        saveID.setValue("default");
+        for(String seq:mySequences)
+        {
+            if(seq=="") continue;
+            String otherid = spinnerMap.get(seq);
+            if(otherid==id)continue;
+            DatabaseReference otherRef=mySeq.child(otherid);
+            otherRef.setValue("");
+        }
     }
 
     @Override

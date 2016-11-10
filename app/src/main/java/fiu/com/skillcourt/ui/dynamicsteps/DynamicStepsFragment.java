@@ -84,18 +84,6 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
         NumberPicker np = (NumberPicker) view.findViewById(R.id.np);
         np.setMaxValue(100);
         np.setMinValue(0);
-        //Step step1 = new Step(getContext());
-        //Step step2 = new Step(getContext());
-        //Step step3 = new Step(getContext());
-        //Step step4 = new Step(getContext());
-        //Step step5 = new Step(getContext());
-
-        //stepLayout.addStepView(step1);
-        //stepLayout.addStepView(step2);
-        //stepLayout.addStepView(step3);
-        //stepLayout.addStepView(step4);
-        //stepLayout.addStepView(step5);
-        //stepLayout.load();
 
     }
 
