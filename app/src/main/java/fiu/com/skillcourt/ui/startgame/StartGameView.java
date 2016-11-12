@@ -6,6 +6,8 @@ package fiu.com.skillcourt.ui.startgame;
 
 public interface StartGameView {
 
+    void setupInitGame();
+    void setupFinishGame();
     void setTimerText(String time);
     void setProgressTotal(int seconds);
     void changeProgressView(long seconds);

@@ -21,6 +21,7 @@ public class SkillCourtGame implements CountdownInterface {
     private int gameTimeTotal = 10;
 
     long currentTime = gameTimeTotal * 1000;
+    long previousSecond = Long.MAX_VALUE;
 
     private GameMode gameMode = GameMode.HIT_MODE;
 
@@ -110,9 +111,21 @@ public class SkillCourtGame implements CountdownInterface {
     }
 
     public void startGame() {
+        resetVariable();
         isRunning = true;
         countDownTimer = new CountDownTimer(currentTime, 1, this);
         countDownTimer.start();
+    }
+
+    private void resetVariable() {
+        score = 0;
+        greenPad = 0;
+        redPad = 0;
+        isRunning = false;
+        totalHits = 0;
+        greenHits = 0;
+        currentTime = gameTimeTotal * 1000;
+        previousSecond = Long.MAX_VALUE;
     }
 
     public void cancelGame() {
@@ -129,12 +142,7 @@ public class SkillCourtGame implements CountdownInterface {
     }
 
     public void restartGame() {
-        score = 0;
-        greenPad = 0;
-        redPad = 0;
-        totalHits = 0;
-        greenHits = 0;
-        currentTime = gameTimeTotal;
+        resetVariable();
         startGame();
     }
 
@@ -144,6 +152,13 @@ public class SkillCourtGame implements CountdownInterface {
         int second = Math.round((float)millisUntilFinished / 1000.0f);
         long minutes = (second / 60);
         long seconds = second % 60;
+        if (seconds < previousSecond) {
+            if (gameMode == GameMode.BEAT_TIMER) {
+                if (seconds % timeObjective == 0) {
+                    skillCourtInteractor.onTimeObjective();
+                }
+            }
+        }
         String time = String.format("%02d:%02d", minutes, seconds);
         skillCourtInteractor.onSecond(time, second);
         skillCourtInteractor.onMillisecond(Math.round((float)millisUntilFinished));
@@ -161,6 +176,10 @@ public class SkillCourtGame implements CountdownInterface {
 
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
+    }
+
+    public void setTimeObjective(int timeObjective) {
+        this.timeObjective = timeObjective;
     }
 
     public GameMode getGameMode() {

@@ -6,7 +6,10 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import fiu.com.skillcourt.connection.Arduino;
@@ -28,23 +31,51 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     private List<Integer> randomNumbers = new ArrayList<>();
 
-    public StartGamePresenter(StartGameView view) {
+    private boolean isCustomSequence = false;
+    private HashMap<String, String> customSteps = new HashMap<>();
+    private int stepCounter = 0;
+
+    public StartGamePresenter(StartGameView view, HashMap<String, String> customSteps) {
         this.view = view;
         skillCourtGame = SkillCourtManager.getInstance().getGame();
         skillCourtGame.setSkillCourtInteractor(this);
         arduinoManager = ArduinoManager.getInstance();
         arduinoManager.setArduinoSkillCourtInteractor(this);
-        randomNumbers.add(1);
-        if (arduinoManager.getArduinos().size() > 1) {
-            for (int i = 1; i < arduinoManager.getArduinos().size(); i++) {
+        if (customSteps.isEmpty()) {
+            isCustomSequence = false;
+            randomNumbers.add(1);
+            if (arduinoManager.getArduinos().size() > 1) {
+                for (int i = 1; i < arduinoManager.getArduinos().size(); i++) {
+                    randomNumbers.add(0);
+                }
+            } else {
                 randomNumbers.add(0);
             }
         } else {
-            randomNumbers.add(0);
+            isCustomSequence = true;
+            this.customSteps = customSteps;
         }
     }
 
+    public void playAgain() {
+        skillCourtGame.restartGame();
+        startGame();
+    }
+
+    public void newGame() {
+
+    }
+
+    public void saveAndPlayAgain() {
+
+    }
+
+    public void saveAndNewGame() {
+
+    }
+
     public void startGame() {
+        view.setupInitGame();
         skillCourtGame.startGame();
         updateArduinosStatus();
         view.setProgressTotal(skillCourtGame.getGameTimeTotal() * 1000);
@@ -52,7 +83,7 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onSecond(String time, long seconds) {
-        view.setTimerText(time);
+        if (view != null) view.setTimerText(time);
     }
 
     @Override
@@ -62,12 +93,15 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onTimeObjective() {
-
+        Log.e("time", "onTimeObjective");
+        if(skillCourtGame.getGameMode() == SkillCourtGame.GameMode.BEAT_TIMER) {
+            updateArduinosStatus();
+        }
     }
 
     @Override
     public void onMessageReceived(Arduino.TYPE_LIGHT currentStatus, String message) {
-        if(skillCourtGame.getGameMode() == SkillCourtGame.GameMode.HIT_MODE && skillCourtGame.isRunning()) {
+        if(skillCourtGame.isRunning()) {
             if (currentStatus == Arduino.TYPE_LIGHT.GREEN) {
                 SkillCourtManager.getInstance().addGreenPoint();
             } else {
@@ -80,20 +114,38 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
             if (view != null) {
                 view.updateResult(sk.getTotalHits(), sk.getGreenHits(), sk.getScore(), sk.getAccuracy());
             }
-            updateArduinosStatus();
+            if (skillCourtGame.getGameMode() == SkillCourtGame.GameMode.HIT_MODE) {
+                updateArduinosStatus();
+            }
         }
     }
 
     private void updateArduinosStatus() {
-        Collections.shuffle(randomNumbers);
-        if (arduinoManager.getArduinos().size() > 1) {
-            for (int i = 0; i < randomNumbers.size(); i++) {
-                Arduino.TYPE_LIGHT type = randomNumbers.get(i) == 0 ? Arduino.TYPE_LIGHT.RED : Arduino.TYPE_LIGHT.GREEN;
-                arduinoManager.getArduinos().get(i).setStatus(type);
+        if (!isCustomSequence) {
+            Collections.shuffle(randomNumbers);
+            if (arduinoManager.getArduinos().size() > 1) {
+                for (int i = 0; i < randomNumbers.size(); i++) {
+                    Arduino.TYPE_LIGHT type = randomNumbers.get(i) == 0 ? Arduino.TYPE_LIGHT.RED : Arduino.TYPE_LIGHT.GREEN;
+                    arduinoManager.getArduinos().get(i).setStatus(type);
+                }
+            } else {
+                Arduino.TYPE_LIGHT type = randomNumbers.get(0) == 0 ? Arduino.TYPE_LIGHT.RED : Arduino.TYPE_LIGHT.GREEN;
+                arduinoManager.getArduinos().get(0).setStatus(type);
             }
         } else {
-            Arduino.TYPE_LIGHT type = randomNumbers.get(0) == 0 ? Arduino.TYPE_LIGHT.RED : Arduino.TYPE_LIGHT.GREEN;
-            arduinoManager.getArduinos().get(0).setStatus(type);
+            int currentStep = stepCounter + 1;
+            if (customSteps.containsKey(String.valueOf(currentStep))) {
+                for (int i = 0; i < arduinoManager.getArduinos().size(); i++) {
+                    String arduinoGreen = customSteps.get(String.valueOf(currentStep));
+                    if (arduinoGreen.equalsIgnoreCase(String.valueOf((i+1)))) {
+                        arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.GREEN);
+                    } else {
+                        arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.RED);
+                    }
+                }
+            }
+            stepCounter++;
+            if (stepCounter % customSteps.size() == 0) stepCounter = 0;
         }
     }
 
@@ -114,11 +166,22 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onFinish() {
-        for (int i = 0; i < randomNumbers.size(); i++) {
-            arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.FINISH);
+        view.setupFinishGame();
+        if (arduinoManager.getArduinos().size() > 1) {
+            for (int i = 0; i < randomNumbers.size(); i++) {
+                arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.FINISH);
+            }
+        } else {
+            arduinoManager.getArduinos().get(0).setStatus(Arduino.TYPE_LIGHT.FINISH);
         }
+        gameFisnished();
         view.setTimerText("TIME's up!");
     }
+
+    private void gameFisnished() {
+
+    }
+
 
     public void cancelGame() {
         skillCourtGame.cancelGame();
