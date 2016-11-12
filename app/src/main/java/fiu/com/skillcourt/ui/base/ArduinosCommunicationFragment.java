@@ -59,6 +59,8 @@ public class ArduinosCommunicationFragment extends BaseFragment {
         }
     }
 
+
+
     protected void terminateActivity() {
         fragmentListener.closeActivity();
         Intent intent = new Intent(getActivity(), MainDashboardActivity.class);
