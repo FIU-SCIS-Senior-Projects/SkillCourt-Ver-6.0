@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textSize="40sp"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorAccent"
                 android:layout_centerInParent="true" />
 
             <ProgressBar

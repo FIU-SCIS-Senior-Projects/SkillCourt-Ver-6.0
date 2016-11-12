@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import fiu.com.skillcourt.connection.Arduino;
@@ -81,7 +83,7 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onSecond(String time, long seconds) {
-        view.setTimerText(time);
+        if (view != null) view.setTimerText(time);
     }
 
     @Override

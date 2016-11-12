@@ -18,7 +18,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.connection.Arduino;
 import fiu.com.skillcourt.connection.ArduinoManager;
+import fiu.com.skillcourt.game.CountDownTimer;
+import fiu.com.skillcourt.game.SkillCourtGame;
 import fiu.com.skillcourt.interfaces.ArduinoSkillCourtInteractor;
+import fiu.com.skillcourt.interfaces.CountdownInterface;
 import fiu.com.skillcourt.ui.LauncherActivity;
 import fiu.com.skillcourt.ui.base.BaseFragment;
 import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
@@ -67,6 +70,36 @@ public class MainDashboardFragment extends BaseFragment {
                 startActivity(intent);
             }
         });
+
+        CountDownTimer a = new CountDownTimer(15000, 1000, new CountdownInterface() {
+
+            boolean newTime = true;
+            long previousSecond = Long.MAX_VALUE;
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int second = Math.round((float)millisUntilFinished / 1000.0f);
+                long minutes = (second / 60);
+                long seconds = second % 60;
+
+                if (seconds < previousSecond) {
+                    previousSecond = seconds;
+                    if (seconds % 3 == 0) {
+                        Log.e("a", " "+previousSecond+" each 3 seconds");
+                    }
+
+                }
+                String time = String.format("%02d:%02d", minutes, seconds);
+            }
+
+            @Override
+            public void onFinish() {
+                Log.e("ta", "finish");
+            }
+        });
+
+        a.start();
+
     }
 
     @Override

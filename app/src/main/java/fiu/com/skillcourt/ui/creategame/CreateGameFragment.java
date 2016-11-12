@@ -107,6 +107,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
                     }
                     Intent intent = new Intent(getActivity(), StartGameActivity.class);
                     startActivity(intent);
+                    fragmentListener.closeActivity();
                 } else {
                     Utils.creatSimpleDialog(getActivity(), "Please fill all the fields").show();
                 }

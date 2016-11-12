@@ -1,5 +1,6 @@
 package fiu.com.skillcourt.ui.startgame;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,13 +14,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.interfaces.Constants;
+import fiu.com.skillcourt.ui.base.ArduinosCommunicationFragment;
+import fiu.com.skillcourt.ui.base.ArduinosStartCommunicationFragment;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class StartGameFragment extends Fragment implements StartGameView, View.OnClickListener{
+public class StartGameFragment extends ArduinosCommunicationFragment implements StartGameView, View.OnClickListener{
 
     private TextView tvTimer;
     private ProgressBar progressBar;
@@ -32,17 +37,21 @@ public class StartGameFragment extends Fragment implements StartGameView, View.O
 
     StartGamePresenter startGamePresenter;
 
-    public static StartGameFragment newInstance() {
+    public static StartGameFragment newInstance(HashMap<String, String> sequences) {
         StartGameFragment startGameFragment = new StartGameFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.
+        if (sequences != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.TAG_SEQUENCE, sequences);
+        }
         return new StartGameFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startGamePresenter = new StartGamePresenter(this, new HashMap<String, String>());
+        HashMap<String, String> sequences = new HashMap<>();
+        if (savedInstanceState.containsKey(Constants.TAG_SEQUENCE)) sequences = (HashMap<String, String>) savedInstanceState.getSerializable(Constants.TAG_SEQUENCE);
+        startGamePresenter = new StartGamePresenter(this, sequences);
     }
 
     @Override
@@ -138,13 +147,24 @@ public class StartGameFragment extends Fragment implements StartGameView, View.O
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_new_game) {
-
+            Intent intent = new Intent(getActivity(), StartGameActivity.class);
+            startActivity(intent);
+            fragmentListener.closeActivity();
         } else if (view.getId() == R.id.btn_save_and_new_game) {
-
+            Intent intent = new Intent(getActivity(), StartGameActivity.class);
+            saveFirebase();
+            startActivity(intent);
+            fragmentListener.closeActivity();
         } else if (view.getId() == R.id.btn_save_play_again) {
-
+            saveFirebase();
+            startGamePresenter.playAgain();
         } else if (view.getId() == R.id.btn_play_again) {
             startGamePresenter.playAgain();
         }
     }
+
+    private void saveFirebase() {
+
+    }
+
 }
