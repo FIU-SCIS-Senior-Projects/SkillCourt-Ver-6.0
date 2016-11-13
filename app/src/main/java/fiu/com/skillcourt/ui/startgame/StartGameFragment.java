@@ -13,10 +13,18 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.entities.Game;
+import fiu.com.skillcourt.game.SkillCourtGame;
+import fiu.com.skillcourt.game.SkillCourtManager;
 import fiu.com.skillcourt.interfaces.Constants;
 import fiu.com.skillcourt.ui.base.ArduinosCommunicationFragment;
 import fiu.com.skillcourt.ui.base.ArduinosStartCommunicationFragment;
@@ -37,6 +45,10 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
 
     StartGamePresenter startGamePresenter;
 
+    //Firebase instances
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference userDatabaseReference;
+
     public static StartGameFragment newInstance(HashMap<String, String> sequences) {
         StartGameFragment startGameFragment = new StartGameFragment();
         if (sequences != null) {
@@ -52,6 +64,8 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
         HashMap<String, String> sequences = new HashMap<>();
         if (savedInstanceState.containsKey(Constants.TAG_SEQUENCE)) sequences = (HashMap<String, String>) savedInstanceState.getSerializable(Constants.TAG_SEQUENCE);
         startGamePresenter = new StartGamePresenter(this, sequences);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userDatabaseReference = firebaseDatabase.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     @Override
@@ -151,20 +165,21 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
             startActivity(intent);
             fragmentListener.closeActivity();
         } else if (view.getId() == R.id.btn_save_and_new_game) {
+            startGamePresenter.saveFirebase();
             Intent intent = new Intent(getActivity(), StartGameActivity.class);
-            saveFirebase();
             startActivity(intent);
             fragmentListener.closeActivity();
         } else if (view.getId() == R.id.btn_save_play_again) {
-            saveFirebase();
+            startGamePresenter.saveFirebase();
             startGamePresenter.playAgain();
         } else if (view.getId() == R.id.btn_play_again) {
             startGamePresenter.playAgain();
         }
     }
 
-    private void saveFirebase() {
-
+    @Override
+    public void saveFirebase(Game game) {
+        userDatabaseReference.child("games").push().setValue(game);
     }
 
 }

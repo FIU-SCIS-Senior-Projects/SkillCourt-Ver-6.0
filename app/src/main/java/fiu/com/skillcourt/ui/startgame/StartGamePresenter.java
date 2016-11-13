@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import fiu.com.skillcourt.connection.Arduino;
 import fiu.com.skillcourt.connection.ArduinoManager;
+import fiu.com.skillcourt.entities.Game;
 import fiu.com.skillcourt.game.SkillCourtGame;
 import fiu.com.skillcourt.game.SkillCourtManager;
 import fiu.com.skillcourt.interfaces.ArduinoSkillCourtInteractor;
@@ -186,4 +188,10 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
     public void cancelGame() {
         skillCourtGame.cancelGame();
     }
+
+    public void saveFirebase() {
+        Game game = new Game(skillCourtGame.getScore(), skillCourtGame.getGreenPad(), skillCourtGame.getRedPad(), skillCourtGame.getTotalHits(), skillCourtGame.getTimeObjective(), skillCourtGame.getGreenHits(), skillCourtGame.getGameTimeTotal(), skillCourtGame.getGameMode(), new Date());
+        view.saveFirebase(game);
+    }
+
 }
