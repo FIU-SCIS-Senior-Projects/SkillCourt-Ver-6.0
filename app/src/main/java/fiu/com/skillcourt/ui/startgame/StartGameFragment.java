@@ -30,7 +30,7 @@ import fiu.com.skillcourt.ui.base.ArduinosCommunicationFragment;
 import fiu.com.skillcourt.ui.base.ArduinosStartCommunicationFragment;
 
 /**
- * A placeholder fragment containing a simple view.
+ * @author pedrocarrillo
  */
 public class StartGameFragment extends ArduinosCommunicationFragment implements StartGameView, View.OnClickListener{
 

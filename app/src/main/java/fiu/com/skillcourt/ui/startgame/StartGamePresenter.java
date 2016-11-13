@@ -22,7 +22,7 @@ import fiu.com.skillcourt.interfaces.ArduinoSkillCourtInteractor;
 import fiu.com.skillcourt.interfaces.SkillCourtInteractor;
 
 /**
- * Created by pedrocarrillo on 9/22/16.
+ * @author  pedrocarrillo on 9/22/16.
  */
 
 public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCourtInteractor {
