@@ -40,15 +40,8 @@ import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
 import fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsActivity;
 import fiu.com.skillcourt.ui.startgame.StartGameActivity;
 
-public class MainDashboardFragment extends BaseFragment implements OnItemSelectedListener {
+public class MainDashboardFragment extends BaseFragment  {
 
-    HashMap myData;
-    Spinner spinner;
-    HashMap<String,String> spinnerMap = new HashMap<String, String>();
-    protected FirebaseAuth mAuth;
-    ArrayList<String> mySequences = new ArrayList<String>();
-    HashMap globalSequences=new HashMap();
-    ArrayAdapter<String> spinnerArrayAdapter;
 
     public static MainDashboardFragment newInstance() {
         return new MainDashboardFragment();
@@ -67,12 +60,7 @@ public class MainDashboardFragment extends BaseFragment implements OnItemSelecte
         setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.fragment_main_dashboard, container, false);
-        spinner = (Spinner)view.findViewById(R.id.sequence_spinner);
 
-        spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, mySequences);
-        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item );
-        spinner.setAdapter(spinnerArrayAdapter);
-        spinner.setOnItemSelectedListener(this);
         return view;
     }
 
@@ -103,52 +91,7 @@ public class MainDashboardFragment extends BaseFragment implements OnItemSelecte
         });
 
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference myRef = database.getReference(user.getUid());
-        final DatabaseReference mySeq=myRef.child("sequences");
-
-        mySeq.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                myData=(HashMap) dataSnapshot.getValue();
-                if(myData==null) return;
-                Iterator entries = myData.entrySet().iterator();
-                mySequences.clear();
-                mySequences.add("");
-                while (entries.hasNext()) {
-                    Map.Entry entry = (Map.Entry) entries.next();
-                    String key = entry.getKey().toString();
-                    HashMap item=(HashMap)globalSequences.get(key);
-                    if(item==null) continue;
-                    mySequences.add(item.get("name").toString());
-                    spinnerMap.put(item.get("name").toString(),key);
-                    entries.remove();
-                }
-                spinnerArrayAdapter.notifyDataSetChanged();
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        DatabaseReference sequences =database.getReference("sequences");
-        sequences.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                globalSequences=(HashMap)dataSnapshot.getValue();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
@@ -171,40 +114,5 @@ public class MainDashboardFragment extends BaseFragment implements OnItemSelecte
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Object sequence = spinner.getSelectedItem();
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference myRef = database.getReference(user.getUid());
-        DatabaseReference mySeq=myRef.child("sequences");
-        if(sequence.toString()==""){
-            for(String seq:mySequences)
-            {
-                if(seq=="") continue;
-                String otherid = spinnerMap.get(seq);
-                DatabaseReference otherRef=mySeq.child(otherid);
-                otherRef.setValue("");
-            }
-            return;
-        }
-        String id = spinnerMap.get(sequence.toString());
 
-        DatabaseReference saveID=mySeq.child(id);
-        saveID.setValue("default");
-        for(String seq:mySequences)
-        {
-            if(seq=="") continue;
-            String otherid = spinnerMap.get(seq);
-            if(otherid==id)continue;
-            DatabaseReference otherRef=mySeq.child(otherid);
-            otherRef.setValue("");
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 }
