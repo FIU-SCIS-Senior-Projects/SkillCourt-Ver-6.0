@@ -1,20 +1,38 @@
 package fiu.com.skillcourt.ui.startgame;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.entities.Game;
+import fiu.com.skillcourt.game.SkillCourtGame;
+import fiu.com.skillcourt.game.SkillCourtManager;
+import fiu.com.skillcourt.interfaces.Constants;
+import fiu.com.skillcourt.ui.base.ArduinosCommunicationFragment;
+import fiu.com.skillcourt.ui.base.ArduinosStartCommunicationFragment;
 
 /**
- * A placeholder fragment containing a simple view.
+ * @author pedrocarrillo
  */
-public class StartGameFragment extends Fragment implements StartGameView {
+public class StartGameFragment extends ArduinosCommunicationFragment implements StartGameView, View.OnClickListener{
 
     private TextView tvTimer;
     private ProgressBar progressBar;
@@ -22,17 +40,32 @@ public class StartGameFragment extends Fragment implements StartGameView {
     private TextView tvGreenHits;
     private TextView tvScore;
     private TextView tvAccuracy;
+    private LinearLayout btnContainer, tvContainer;
+    private RelativeLayout timerContainer;
 
     StartGamePresenter startGamePresenter;
 
-    public static StartGameFragment newInstance() {
+    //Firebase instances
+    FirebaseDatabase firebaseDatabase;
+    DatabaseReference userDatabaseReference;
+
+    public static StartGameFragment newInstance(HashMap<String, String> sequences) {
+        StartGameFragment startGameFragment = new StartGameFragment();
+        if (sequences != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Constants.TAG_SEQUENCE, sequences);
+        }
         return new StartGameFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startGamePresenter = new StartGamePresenter(this);
+        HashMap<String, String> sequences = new HashMap<>();
+        if (savedInstanceState.containsKey(Constants.TAG_SEQUENCE)) sequences = (HashMap<String, String>) savedInstanceState.getSerializable(Constants.TAG_SEQUENCE);
+        startGamePresenter = new StartGamePresenter(this, sequences);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        userDatabaseReference = firebaseDatabase.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
 
     @Override
@@ -50,6 +83,18 @@ public class StartGameFragment extends Fragment implements StartGameView {
         tvHits = (TextView)view.findViewById(R.id.tv_hits);
         tvScore = (TextView)view.findViewById(R.id.tv_score);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
+        btnContainer = (LinearLayout)view.findViewById(R.id.btn_containers);
+        tvContainer = (LinearLayout)view.findViewById(R.id.tv_container);
+        timerContainer = (RelativeLayout)view.findViewById(R.id.timer_container);
+        Button btnNewGame, btnSaveAndPlay, btnPlayAgain, btnSaveAndNewGame;
+        btnNewGame = (Button) view.findViewById(R.id.btn_new_game);
+        btnPlayAgain = (Button) view.findViewById(R.id.btn_play_again);
+        btnSaveAndPlay = (Button) view.findViewById(R.id.btn_save_play_again);
+        btnSaveAndNewGame = (Button) view.findViewById(R.id.btn_save_and_new_game);
+        btnNewGame.setOnClickListener(this);
+        btnPlayAgain.setOnClickListener(this);
+        btnSaveAndPlay.setOnClickListener(this);
+        btnSaveAndNewGame.setOnClickListener(this);
         startGamePresenter.startGame();
     }
 
@@ -98,4 +143,43 @@ public class StartGameFragment extends Fragment implements StartGameView {
             }
         });
     }
+
+    @Override
+    public void setupInitGame() {
+        timerContainer.setVisibility(View.VISIBLE);
+        btnContainer.setVisibility(View.GONE);
+        tvContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setupFinishGame() {
+        timerContainer.setVisibility(View.GONE);
+        btnContainer.setVisibility(View.VISIBLE);
+        tvContainer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_new_game) {
+            Intent intent = new Intent(getActivity(), StartGameActivity.class);
+            startActivity(intent);
+            fragmentListener.closeActivity();
+        } else if (view.getId() == R.id.btn_save_and_new_game) {
+            startGamePresenter.saveFirebase();
+            Intent intent = new Intent(getActivity(), StartGameActivity.class);
+            startActivity(intent);
+            fragmentListener.closeActivity();
+        } else if (view.getId() == R.id.btn_save_play_again) {
+            startGamePresenter.saveFirebase();
+            startGamePresenter.playAgain();
+        } else if (view.getId() == R.id.btn_play_again) {
+            startGamePresenter.playAgain();
+        }
+    }
+
+    @Override
+    public void saveFirebase(Game game) {
+        userDatabaseReference.child("games").push().setValue(game);
+    }
+
 }

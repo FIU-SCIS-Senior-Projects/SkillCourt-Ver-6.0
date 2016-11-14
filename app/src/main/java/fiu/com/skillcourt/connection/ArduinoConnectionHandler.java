@@ -38,7 +38,7 @@ public class ArduinoConnectionHandler implements Runnable {
             arduinoConnectionListener.onConnect(this);
             while (connected) {
                 String hit = inStream.readLine();
-                arduinoConnectionListener.onMessageReceived(arduino.getStatus(), hit);
+                arduinoConnectionListener.onMessageReceived(getCurrent(), hit);
             }
 
         } catch (IOException e) {
@@ -47,9 +47,14 @@ public class ArduinoConnectionHandler implements Runnable {
         }
     }
 
+    public synchronized Arduino.TYPE_LIGHT getCurrent() {
+        return arduino.getStatus();
+    }
+
     public void setStatus(Arduino.TYPE_LIGHT status) {
         try {
             arduino.setStatus(status);
+
             OutputStream outputStream = socket.getOutputStream();
             if (outputStream != null) {
                 outputStream.write(status.toString().getBytes());

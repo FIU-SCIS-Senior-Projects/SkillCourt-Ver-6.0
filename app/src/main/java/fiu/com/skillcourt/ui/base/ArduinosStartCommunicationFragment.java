@@ -37,11 +37,10 @@ public class ArduinosStartCommunicationFragment extends ArduinosCommunicationFra
         super.onViewCreated(view, savedInstanceState);
         llGameLayout = (LinearLayout)view.findViewById(R.id.game_content);
         llArduinoConnection = (LinearLayout)view.findViewById(R.id.loading_arduinos);
-        //TODO: UNCOMMENT
-//        if (ArduinoManager.getInstance().isConnected()) {
+        if (ArduinoManager.getInstance().isConnected()) {
             llGameLayout.setVisibility(View.VISIBLE);
             llArduinoConnection.setVisibility(View.GONE);
-//        }
+        }
     }
 
     @Override
