@@ -14,9 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 
+import java.util.HashMap;
+
 import fiu.com.skillcourt.R;
 import fiu.com.skillcourt.game.SkillCourtGame;
 import fiu.com.skillcourt.game.SkillCourtManager;
+import fiu.com.skillcourt.interfaces.Constants;
 import fiu.com.skillcourt.ui.base.ArduinosStartCommunicationFragment;
 import fiu.com.skillcourt.ui.base.Utils;
 import fiu.com.skillcourt.ui.custom.GameModePickerFragment;
@@ -106,6 +109,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
                         SkillCourtManager.getInstance().getGame().setTimeObjective(frequencyTime);
                     }
                     Intent intent = new Intent(getActivity(), StartGameActivity.class);
+                    intent.putExtra(Constants.TAG_SEQUENCE, new HashMap<String, String>());
                     startActivity(intent);
                     fragmentListener.closeActivity();
                 } else {

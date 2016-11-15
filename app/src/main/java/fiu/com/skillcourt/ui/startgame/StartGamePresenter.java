@@ -64,18 +64,6 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
         startGame();
     }
 
-    public void newGame() {
-
-    }
-
-    public void saveAndPlayAgain() {
-
-    }
-
-    public void saveAndNewGame() {
-
-    }
-
     public void startGame() {
         view.setupInitGame();
         skillCourtGame.startGame();
@@ -190,7 +178,7 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
     }
 
     public void saveFirebase() {
-        Game game = new Game(skillCourtGame.getScore(), skillCourtGame.getGreenPad(), skillCourtGame.getRedPad(), skillCourtGame.getTotalHits(), skillCourtGame.getTimeObjective(), skillCourtGame.getGreenHits(), skillCourtGame.getGameTimeTotal(), skillCourtGame.getGameMode(), new Date());
+        Game game = new Game(skillCourtGame.getScore(), skillCourtGame.getGreenPad(), skillCourtGame.getRedPad(), skillCourtGame.getTotalHits(), skillCourtGame.getTimeObjective(), skillCourtGame.getGreenHits(), skillCourtGame.getGameTimeTotal(), skillCourtGame.getAccuracy(), skillCourtGame.getGameMode().toString(), new Date().getTime());
         view.saveFirebase(game);
     }
 

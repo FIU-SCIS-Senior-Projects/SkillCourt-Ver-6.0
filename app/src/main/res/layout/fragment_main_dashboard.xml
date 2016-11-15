@@ -5,6 +5,17 @@
     android:padding="@dimen/activity_vertical_margin">
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your progress this week:"
+        android:textColor="@color/colorAccent"/>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart_dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"/>
+
+    <TextView
         android:id="@+id/tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

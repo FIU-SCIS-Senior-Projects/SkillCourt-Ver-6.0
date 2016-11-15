@@ -47,6 +47,8 @@ dependencies {
     compile "com.google.firebase:firebase-auth:$firebaseVersion"
     compile 'com.google.firebase:firebase-database:9.4.0'
     compile project(':materialstepperlibrary-release')
+
+    compile 'com.github.PhilJay:MPAndroidChart:v3.0.0'
 }
 
 

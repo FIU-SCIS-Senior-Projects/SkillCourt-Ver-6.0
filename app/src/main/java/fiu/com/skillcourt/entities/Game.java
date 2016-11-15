@@ -17,11 +17,12 @@ public class Game {
     private int timeObjective;
     private float greenHits;
     private int gameTimeTotal;
-    private Date date;
+    private int accuracy;
+    private long date;
 
     private String gameMode;
 
-    public Game(int score, int greenPad, int redPad, float totalHits, int timeObjective, float greenHits, int gameTimeTotal, SkillCourtGame.GameMode gameMode, Date date) {
+    public Game(int score, int greenPad, int redPad, float totalHits, int timeObjective, float greenHits, int gameTimeTotal, int accuracy, String gameMode, long date) {
         this.score = score;
         this.greenPad = greenPad;
         this.redPad = redPad;
@@ -29,8 +30,12 @@ public class Game {
         this.timeObjective = timeObjective;
         this.greenHits = greenHits;
         this.gameTimeTotal = gameTimeTotal;
-        this.gameMode = gameMode.toString();
+        this.gameMode = gameMode;
+        this.accuracy = accuracy;
         this.date = date;
+    }
+
+    public Game() {
 
     }
 
@@ -94,15 +99,23 @@ public class Game {
         return gameMode;
     }
 
-    public void setGameMode(SkillCourtGame.GameMode gameMode) {
-        this.gameMode = gameMode.toString();
+    public void setGameMode(String gameMode) {
+        this.gameMode = gameMode;
     }
 
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
+    }
+
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(int accuracy) {
+        this.accuracy = accuracy;
     }
 }

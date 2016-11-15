@@ -22,6 +22,11 @@
     <string name="pick_game_mode">Select a game mode</string>
     <string name="verifying_connection_to_arduinos">Verifying connection to arduinos</string>
     <string name="time_objective">Time Objective</string>
+    <string name="open_drawer">Skill Court</string>
+    <string name="close_drawer">Skill Court</string>
+    <string name="home_title">Home</string>
+    <string name="dynamic_seq_title">Dynamic Sequences</string>
+    <string name="Statistics">Statistics</string>
 
     <string-array name="game_modes">
         <item>Beat Timer</item>
