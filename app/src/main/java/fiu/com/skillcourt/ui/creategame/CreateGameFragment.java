@@ -63,7 +63,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
     ArrayAdapter<String> spinnerArrayAdapter;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference sequences =database.getReference("sequences");
-    String defaultKey;
+    String defaultKey="";
     HashMap<String,String> defaultSequence = new HashMap<String, String>();
 
     NumberPickerFragment numberPickerFragment = new NumberPickerFragment();
@@ -206,7 +206,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
                     mySequences.add(item.get("name").toString());
                     spinnerMap.put(item.get("name").toString(),key);
                     entries.remove();
-                    if(defaultKey!=null){
+                    if(defaultKey!=""){
                         int spinnerPosition = spinnerArrayAdapter.getPosition(((Map.Entry)
                                 defaultSequence.entrySet().toArray()[0]).getValue().toString());
                         spinner.setSelection(spinnerPosition);
@@ -267,6 +267,8 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
         DatabaseReference myRef;
         DatabaseReference mySeq;
         if(sequence.toString()=="" && mAuth!=null){
+            defaultKey="";
+            defaultSequence=null;
             mAuth = FirebaseAuth.getInstance();
             user= mAuth.getCurrentUser();
             myRef= database.getReference(user.getUid());
