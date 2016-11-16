@@ -61,6 +61,10 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
     ArrayList<String> mySequences = new ArrayList<String>();
     HashMap globalSequences=new HashMap();
     ArrayAdapter<String> spinnerArrayAdapter;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference sequences =database.getReference("sequences");
+    String defaultKey;
+    HashMap<String,String> defaultSequence = new HashMap<String, String>();
 
     NumberPickerFragment numberPickerFragment = new NumberPickerFragment();
 
@@ -151,13 +155,12 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
         });
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
         DatabaseReference myRef = database.getReference(user.getUid());
         final DatabaseReference mySeq=myRef.child("sequences");
 
-        DatabaseReference sequences =database.getReference("sequences");
+
         sequences.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -173,7 +176,8 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
         //View view = inflater.inflate(R.layout.fragment_create_game, container, false);
         spinner = (Spinner)view.findViewById(R.id.sequence_spinner);
 
-        spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_spinner_item, mySequences);
+        spinnerArrayAdapter = new ArrayAdapter<String>(this.getContext(),
+                android.R.layout.simple_spinner_item, mySequences);
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item );
         spinner.setAdapter(spinnerArrayAdapter);
         spinner.setOnItemSelectedListener(this);
@@ -188,11 +192,25 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
                 while (entries.hasNext()) {
                     Map.Entry entry = (Map.Entry) entries.next();
                     String key = entry.getKey().toString();
+                    String value=entry.getValue().toString();
                     HashMap item=(HashMap)globalSequences.get(key);
                     if(item==null) continue;
+                    if(value.equals("default")){
+                        defaultKey=key;
+                        defaultSequence=item;
+
+
+
+                    }
+
                     mySequences.add(item.get("name").toString());
                     spinnerMap.put(item.get("name").toString(),key);
                     entries.remove();
+                    if(defaultKey!=null){
+                        int spinnerPosition = spinnerArrayAdapter.getPosition(((Map.Entry)
+                                defaultSequence.entrySet().toArray()[0]).getValue().toString());
+                        spinner.setSelection(spinnerPosition);
+                    }
                 }
                 spinnerArrayAdapter.notifyDataSetChanged();
             }
@@ -205,8 +223,8 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
         });
 
 
-
     }
+
 
     public boolean isValid() {
         if (selectedGameMode != null) {
@@ -245,13 +263,11 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Object sequence = spinner.getSelectedItem();
-        FirebaseDatabase database;
         FirebaseUser user ;
         DatabaseReference myRef;
         DatabaseReference mySeq;
         if(sequence.toString()=="" && mAuth!=null){
             mAuth = FirebaseAuth.getInstance();
-            database= FirebaseDatabase.getInstance();
             user= mAuth.getCurrentUser();
             myRef= database.getReference(user.getUid());
             mySeq=myRef.child("sequences");
@@ -266,7 +282,6 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
         }
         else{
             mAuth = FirebaseAuth.getInstance();
-            database= FirebaseDatabase.getInstance();
             user= mAuth.getCurrentUser();
             myRef= database.getReference(user.getUid());
             mySeq=myRef.child("sequences");
@@ -284,6 +299,33 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
             DatabaseReference otherRef=mySeq.child(otherid);
             otherRef.setValue("");
         }
+    }
+
+    public void getGlobalSequences(){
+        sequences.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                globalSequences=(HashMap)dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void getMySequences(){
+        sequences.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                myData=(HashMap)dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
