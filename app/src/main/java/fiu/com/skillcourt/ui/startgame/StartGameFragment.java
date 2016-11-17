@@ -37,6 +37,7 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
     private TextView tvTimer;
     private ProgressBar progressBar;
     private TextView tvHits;
+    private TextView tvRedHits;
     private TextView tvGreenHits;
     private TextView tvScore;
     private TextView tvAccuracy;
@@ -80,6 +81,7 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
         tvTimer = (TextView)view.findViewById(R.id.tvTimer);
         tvAccuracy = (TextView)view.findViewById(R.id.tv_accuracy);
         tvGreenHits = (TextView)view.findViewById(R.id.tv_green_hits);
+        tvRedHits = (TextView) view.findViewById(R.id.tv_red_hits);
         tvHits = (TextView)view.findViewById(R.id.tv_hits);
         tvScore = (TextView)view.findViewById(R.id.tv_score);
         progressBar = (ProgressBar)view.findViewById(R.id.progressBar);
@@ -132,11 +134,12 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
     }
 
     @Override
-    public void updateResult(final float totalHits,final float greenHits,final int score,final int accuracy) {
+    public void updateResult(final float totalHits,final float greenHits, final float redHits,final int score,final int accuracy) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 tvHits.setText(String.valueOf(totalHits));
+                tvRedHits.setText(String.valueOf(redHits));
                 tvGreenHits.setText(String.valueOf(greenHits));
                 tvScore.setText(String.valueOf(score));
                 tvAccuracy.setText(String.valueOf(accuracy) + " %");

@@ -13,7 +13,7 @@ public interface StartGameView {
     void setTimerText(String time);
     void setProgressTotal(int seconds);
     void changeProgressView(long seconds);
-    void updateResult(float totalHits, float greenHits, int score, int accuracy);
+    void updateResult(float totalHits, float greenHits, final float redHits, int score, int accuracy);
     void saveFirebase(Game game);
 
 }

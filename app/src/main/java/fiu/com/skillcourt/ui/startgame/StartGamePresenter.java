@@ -102,7 +102,7 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
             Log.e("points", "acc "+ SkillCourtManager.getInstance().getGame().getAccuracy());
             SkillCourtGame sk = SkillCourtManager.getInstance().getGame();
             if (view != null) {
-                view.updateResult(sk.getTotalHits(), sk.getGreenHits(), sk.getScore(), sk.getAccuracy());
+                view.updateResult(sk.getTotalHits(), sk.getGreenHits(), sk.getRedPad(), sk.getScore(), sk.getAccuracy());
             }
             if (skillCourtGame.getGameMode() == SkillCourtGame.GameMode.HIT_MODE) {
                 updateArduinosStatus();
