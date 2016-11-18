@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/activity_vertical_margin">
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your progress this week:"
-        android:textColor="@color/colorAccent"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/activity_vertical_margin">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart_dashboard"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your progress this week:"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"/>
 
-    <TextView
-        android:id="@+id/tv_welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Welcome"/>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/start_custom_steps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Customize steps"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <Button
-        android:id="@+id/start_game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start game"/>
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_dashboard"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
 
+            </LinearLayout>
 
+        </android.support.v7.widget.CardView>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_height="wrap_content"
+            android:text="Past Games"/>
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_past_games"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@android:color/white"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

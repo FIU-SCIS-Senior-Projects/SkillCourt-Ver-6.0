@@ -28,6 +28,10 @@
     <string name="home_title">Home</string>
     <string name="dynamic_seq_title">Dynamic Sequences</string>
     <string name="Statistics">Statistics</string>
+    <string name="score_placeholder">Score: %s</string>
+    <string name="accuracy_placeholder">Accuracy: %s \%</string>
+    <string name="game_mode_placeholder">Game mode: %s</string>
+    <string name="game_time_placeholder">Game time: %s</string>
 
     <string-array name="game_modes">
         <item>Beat Timer</item>

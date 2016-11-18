@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -32,6 +33,14 @@ public class MainDashboardActivity extends BaseActivity {
         navigationView = (NavigationView)findViewById(R.id.navigation);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         fabStartGame = (FloatingActionButton) findViewById(R.id.fb_start_game);
+
+
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        if (email != null) {
+            TextView tvWelcome = (TextView)navigationView.getHeaderView(0).findViewById(R.id.tv_welcome);
+            tvWelcome.setText("Welcome "+ email);
+        }
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
