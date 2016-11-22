@@ -145,7 +145,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
                         SkillCourtManager.getInstance().getGame().setTimeObjective(frequencyTime);
                     }
                     Intent intent = new Intent(getActivity(), StartGameActivity.class);
-                    intent.putExtra(Constants.TAG_SEQUENCE, new HashMap<String, String>());
+                    intent.putExtra(Constants.TAG_SEQUENCE, defaultSequence);
                     startActivity(intent);
                     fragmentListener.closeActivity();
                 } else {

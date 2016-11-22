@@ -152,7 +152,8 @@ public class SkillCourtGame implements CountdownInterface {
         int second = Math.round((float)millisUntilFinished / 1000.0f);
         long minutes = (second / 60);
         long seconds = second % 60;
-        if (seconds < previousSecond) {
+        if (seconds != 0 && seconds < previousSecond) {
+            previousSecond = seconds;
             if (gameMode == GameMode.BEAT_TIMER) {
                 if (seconds % timeObjective == 0) {
                     skillCourtInteractor.onTimeObjective();

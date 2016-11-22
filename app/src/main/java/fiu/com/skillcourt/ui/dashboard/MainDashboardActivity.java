@@ -18,6 +18,7 @@ import fiu.com.skillcourt.ui.LauncherActivity;
 import fiu.com.skillcourt.ui.base.BaseActivity;
 import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
 import fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsFragment;
+import fiu.com.skillcourt.ui.statistics.StatisticsFragment;
 
 public class MainDashboardActivity extends BaseActivity {
 
@@ -60,6 +61,7 @@ public class MainDashboardActivity extends BaseActivity {
                         return true;
                     case R.id.statistics:
                         title = getString(R.string.Statistics);
+                        replaceFragment(new StatisticsFragment(), true);
                         getSupportActionBar().setTitle(title);
                         return true;
                     case R.id.action_sign_out:

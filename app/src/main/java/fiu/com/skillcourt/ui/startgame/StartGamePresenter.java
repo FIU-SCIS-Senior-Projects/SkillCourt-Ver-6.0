@@ -78,13 +78,15 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     @Override
     public void onMillisecond(long milliseconds) {
-        view.changeProgressView(milliseconds);
+        if (view != null) {
+            view.changeProgressView(milliseconds);
+        }
     }
 
     @Override
     public void onTimeObjective() {
-        Log.e("time", "onTimeObjective");
         if(skillCourtGame.getGameMode() == SkillCourtGame.GameMode.BEAT_TIMER) {
+            Log.e("time", "onTimeObjective");
             updateArduinosStatus();
         }
     }
@@ -124,9 +126,11 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
             }
         } else {
             int currentStep = stepCounter + 1;
+            Log.e("currentStep", currentStep + " ");
             if (customSteps.containsKey(String.valueOf(currentStep))) {
                 for (int i = 0; i < arduinoManager.getArduinos().size(); i++) {
                     String arduinoGreen = customSteps.get(String.valueOf(currentStep));
+                    Log.e("testSequences", arduinoGreen + " is going to be green");
                     if (arduinoGreen.equalsIgnoreCase(String.valueOf((i+1)))) {
                         arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.GREEN);
                     } else {
@@ -151,12 +155,18 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     public void onResume(StartGameView view) {
         this.view = view;
-        skillCourtGame.resume();
+//        skillCourtGame.resume();
     }
 
     @Override
     public void onFinish() {
         view.setupFinishGame();
+        sendSignalArduinoFinish();
+        gameFisnished();
+        view.setTimerText("TIME's up!");
+    }
+
+    private void sendSignalArduinoFinish() {
         if (arduinoManager.getArduinos().size() > 1) {
             for (int i = 0; i < randomNumbers.size(); i++) {
                 arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.FINISH);
@@ -164,8 +174,6 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
         } else {
             arduinoManager.getArduinos().get(0).setStatus(Arduino.TYPE_LIGHT.FINISH);
         }
-        gameFisnished();
-        view.setTimerText("TIME's up!");
     }
 
     private void gameFisnished() {
