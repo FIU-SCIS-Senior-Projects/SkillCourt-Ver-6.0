@@ -41,7 +41,7 @@ public class GamesPlayedRecyclerViewAdapter extends RecyclerView.Adapter<GamesPl
     public void onBindViewHolder(GamesPlayedViewHolder holder, int position) {
         Game game = gamesList.get(position);
         holder.tvScore.setText(holder.tvScore.getContext().getString(R.string.score_placeholder, String.valueOf(game.getScore())));
-        int second = Math.round((float)game.getGameTimeTotal() / 1000.0f);
+        int second = game.getGameTimeTotal();
         long minutes = (second / 60);
         long seconds = second % 60;
         String time = String.format("%02d:%02d", minutes, seconds);

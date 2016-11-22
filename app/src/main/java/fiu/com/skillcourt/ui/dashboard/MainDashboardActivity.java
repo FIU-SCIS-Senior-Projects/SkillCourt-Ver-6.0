@@ -61,7 +61,7 @@ public class MainDashboardActivity extends BaseActivity {
                         return true;
                     case R.id.statistics:
                         title = getString(R.string.Statistics);
-                        replaceFragment(new StatisticsFragment(), true);
+//                        replaceFragment(new StatisticsFragment(), true);
                         getSupportActionBar().setTitle(title);
                         return true;
                     case R.id.action_sign_out:
