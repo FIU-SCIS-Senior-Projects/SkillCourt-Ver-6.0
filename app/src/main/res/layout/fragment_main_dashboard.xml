@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/tv_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Welcome"/>
+
+    <Button
+        android:id="@+id/start_custom_steps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Customize steps"/>
+
+    <Button
+        android:id="@+id/start_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start game"/>
+
+    <Button
+        android:id="@+id/viewHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View History"/>
+
+</LinearLayout>
