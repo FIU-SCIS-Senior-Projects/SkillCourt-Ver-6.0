@@ -157,7 +157,8 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
-        DatabaseReference myRef = database.getReference(user.getUid());
+        DatabaseReference users =database.getReference("users");
+        DatabaseReference myRef = users.child(user.getUid());
         final DatabaseReference mySeq=myRef.child("sequences");
 
 
@@ -271,7 +272,8 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
             defaultSequence=null;
             mAuth = FirebaseAuth.getInstance();
             user= mAuth.getCurrentUser();
-            myRef= database.getReference(user.getUid());
+            DatabaseReference users =database.getReference("users");
+            myRef = users.child(user.getUid());
             mySeq=myRef.child("sequences");
             for(String seq:mySequences)
             {
@@ -285,7 +287,8 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
         else{
             mAuth = FirebaseAuth.getInstance();
             user= mAuth.getCurrentUser();
-            myRef= database.getReference(user.getUid());
+            DatabaseReference users =database.getReference("users");
+            myRef = users.child(user.getUid());
             mySeq=myRef.child("sequences");
         }
         String id = spinnerMap.get(sequence.toString());
