@@ -126,7 +126,6 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
             }
         } else {
             int currentStep = stepCounter + 1;
-            Log.e("currentStep", currentStep + " ");
             if (customSteps.containsKey(String.valueOf(currentStep))) {
                 for (int i = 0; i < arduinoManager.getArduinos().size(); i++) {
                     String arduinoGreen = customSteps.get(String.valueOf(currentStep));

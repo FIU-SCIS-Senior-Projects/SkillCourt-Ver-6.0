@@ -34,6 +34,7 @@ public class ArduinoConnectionHandler implements Runnable {
         try {
             socket.connect(new InetSocketAddress(arduino.getIp(), arduino.getPort()));
             connected = true;
+            Log.e("Arduino", "connected to "+arduino.getIp());
             inStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             arduinoConnectionListener.onConnect(this);
             while (connected) {
