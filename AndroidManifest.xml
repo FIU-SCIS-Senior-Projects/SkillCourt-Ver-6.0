@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fiu.com.skillcourt">
+
+    <application
+        android:name=".SkillCourtApp"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.intro.IntroActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.register.RegisterActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.dashboard.MainDashboardActivity"
+            android:label="@string/app_name" />
+        <activity android:name=".ui.startgame.StartGameActivity" />
+        <activity android:name=".ui.creategame.CreateGameActivity" />
+        <activity
+            android:name=".ui.dynamicsteps.DynamicStepsActivity"
+            android:label="@string/title_activity_dynamic_steps"
+            android:parentActivityName=".ui.base.BaseActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="fiu.com.skillcourt.ui.base.BaseActivity" />
+        </activity>
+        <activity
+            android:name=".ui.base.StatsActivity"
+            android:label="StatsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+    </application>
+
+</manifest>
