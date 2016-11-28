@@ -131,7 +131,8 @@ public class DynamicStepsFragment extends Fragment implements View.OnClickListen
 
                     //save sequence ID inside user
                     FirebaseUser user = mAuth.getCurrentUser();
-                    DatabaseReference myRef = database.getReference(user.getUid());
+                    DatabaseReference users =database.getReference("users");
+                    DatabaseReference myRef = users.child(user.getUid());
                     DatabaseReference mySeq=myRef.child("sequences");
                     DatabaseReference saveID=mySeq.child(myKey.getKey());
                     saveID.setValue(myKey.getKey());
