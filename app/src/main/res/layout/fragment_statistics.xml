@@ -2,6 +2,7 @@
 
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
@@ -15,7 +16,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="fiu.com.skillcourt.ui.history.ViewHistory">
+        tools:context="fiu.com.skillcourt.ui.base.StatsActivity">
 
 
         <LinearLayout
@@ -27,7 +28,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/imageView"
+                app:srcCompat="@drawable/history_hdr"
                 android:adjustViewBounds="false" />
+
+            <TextView
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:id="@+id/spacesss" />
+
+            <TextView
+                android:text="Games Played"
+                android:layout_width="match_parent"
+                android:layout_height="152dp"
+                android:gravity="center"
+                android:id="@+id/gamesPlayed"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
             <TextView
                 android:text=""
@@ -36,23 +54,12 @@
                 android:gravity="center"
                 android:id="@+id/space" />
 
-            <TextView
-                android:text="% Accuracy of Games Played"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:id="@+id/textView" />
-
-            <com.github.mikephil.charting.charts.LineChart
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:id="@+id/chart">
-            </com.github.mikephil.charting.charts.LineChart>
 
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:srcCompat="@drawable/stats1112"
                 android:id="@+id/imageView2" />
 
             <LinearLayout
@@ -85,29 +92,14 @@
                     android:layout_weight="1" />
             </LinearLayout>
 
-
             <TextView
                 android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/space1" />
 
-
-            <TextView
-                android:text="                   Compare my 'HITS PER GAME'"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:id="@+id/hitsTitle" />
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:id="@+id/bChart">
-            </com.github.mikephil.charting.charts.BarChart>
-
         </LinearLayout>
+
 
 
     </RelativeLayout>

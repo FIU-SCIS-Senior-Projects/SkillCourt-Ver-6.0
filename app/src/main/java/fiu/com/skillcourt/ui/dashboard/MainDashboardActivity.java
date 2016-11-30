@@ -19,6 +19,7 @@ import fiu.com.skillcourt.ui.base.BaseActivity;
 import fiu.com.skillcourt.ui.creategame.CreateGameActivity;
 import fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsFragment;
 import fiu.com.skillcourt.ui.statistics.StatisticsFragment;
+import fiu.com.skillcourt.ui.statistics.StatsActivity;
 
 public class MainDashboardActivity extends BaseActivity {
 
@@ -61,8 +62,8 @@ public class MainDashboardActivity extends BaseActivity {
                         return true;
                     case R.id.statistics:
                         title = getString(R.string.Statistics);
-//                        replaceFragment(new StatisticsFragment(), true);
-                        getSupportActionBar().setTitle(title);
+                        Intent intent1 = new Intent(MainDashboardActivity.this, StatsActivity.class);
+                        startActivity(intent1);
                         return true;
                     case R.id.action_sign_out:
                         FirebaseAuth.getInstance().signOut();
