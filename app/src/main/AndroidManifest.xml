@@ -35,6 +35,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"></activity>
         <activity android:name=".ui.creategame.CreateGameActivity"/>
+        <activity android:name=".ui.statistics.StatsActivity"/>
         <activity
             android:name=".ui.dynamicsteps.DynamicStepsActivity"
             android:label="@string/title_activity_dynamic_steps"
