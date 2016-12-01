@@ -47,18 +47,32 @@ public class ArduinoManager implements ArduinoConnectionListener {
 
     public void startConnection() {
 
-//        String host = "192.168.1.194";
         String host = "192.168.1.233";
+//        String host = "192.168.1.233";
         int port = 23;
 
         Arduino first = new Arduino(host, port, Arduino.TYPE_LIGHT.START);
         arduinos.add(new ArduinoConnectionHandler(first, this));
 
 //        String host2 = "192.168.1.195";
-//        String host2 = "192.168.1.233";
-//        int port2 = 23;
-//        Arduino second = new Arduino(host2, port2, Arduino.TYPE_LIGHT.START);
-//        arduinos.add(new ArduinoConnectionHandler(second, this));
+        String host2 = "192.168.1.234";
+        int port2 = 23;
+        Arduino second = new Arduino(host2, port2, Arduino.TYPE_LIGHT.START);
+        arduinos.add(new ArduinoConnectionHandler(second, this));
+
+
+////        String host2 = "192.168.1.195";
+//        String host3 = "192.168.1.235";
+//        int port3 = 23;
+//        Arduino third = new Arduino(host3, port3, Arduino.TYPE_LIGHT.START);
+//        arduinos.add(new ArduinoConnectionHandler(third, this));
+//
+//
+////        String host2 = "192.168.1.195";
+//        String host4 = "192.168.1.236";
+//        int port4 = 23;
+//        Arduino fourth = new Arduino(host4, port4, Arduino.TYPE_LIGHT.START);
+//        arduinos.add(new ArduinoConnectionHandler(fourth, this));
 
 
         for (final ArduinoConnectionHandler arduinoConnectionHandler : arduinos) {

@@ -34,10 +34,11 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
     private List<Integer> randomNumbers = new ArrayList<>();
 
     private boolean isCustomSequence = false;
-    private HashMap<String, String> customSteps = new HashMap<>();
-    private int stepCounter = 0;
+//    private HashMap<String, String> customSteps = new HashMap<>();
+    private List<String> customSteps;
+    private int stepCounter = 1;
 
-    public StartGamePresenter(StartGameView view, HashMap<String, String> customSteps) {
+    public StartGamePresenter(StartGameView view, List<String> customSteps) {
         this.view = view;
         skillCourtGame = SkillCourtManager.getInstance().getGame();
         skillCourtGame.setSkillCourtInteractor(this);
@@ -61,7 +62,10 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
 
     public void playAgain() {
         skillCourtGame.restartGame();
-        startGame();
+        view.updateResult(skillCourtGame.getTotalHits(), skillCourtGame.getGreenHits(), skillCourtGame.getRedPad(), skillCourtGame.getScore(), skillCourtGame.getAccuracy());
+        view.setupInitGame();
+        updateArduinosStatus();
+        view.setProgressTotal(skillCourtGame.getGameTimeTotal() * 1000);
     }
 
     public void startGame() {
@@ -104,7 +108,7 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
             Log.e("points", "acc "+ SkillCourtManager.getInstance().getGame().getAccuracy());
             SkillCourtGame sk = SkillCourtManager.getInstance().getGame();
             if (view != null) {
-                view.updateResult(sk.getTotalHits(), sk.getGreenHits(), sk.getRedPad(), sk.getScore(), sk.getAccuracy());
+                view.updateResult(skillCourtGame.getTotalHits(), skillCourtGame.getGreenHits(), skillCourtGame.getRedPad(), skillCourtGame.getScore(), skillCourtGame.getAccuracy());
             }
             if (skillCourtGame.getGameMode() == SkillCourtGame.GameMode.HIT_MODE) {
                 updateArduinosStatus();
@@ -125,12 +129,13 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
                 arduinoManager.getArduinos().get(0).setStatus(type);
             }
         } else {
-            int currentStep = stepCounter + 1;
-            if (customSteps.containsKey(String.valueOf(currentStep))) {
-                for (int i = 0; i < arduinoManager.getArduinos().size(); i++) {
-                    String arduinoGreen = customSteps.get(String.valueOf(currentStep));
-                    Log.e("testSequences", arduinoGreen + " is going to be green");
-                    if (arduinoGreen.equalsIgnoreCase(String.valueOf((i+1)))) {
+            int currentStep = stepCounter;
+            Log.e("size", "" + customSteps.size() + " " + currentStep + " " + customSteps.get(currentStep));
+            for (int i = 0; i < arduinoManager.getArduinos().size(); i++) {
+                String arduinoGreen = customSteps.get(currentStep);
+                Log.e("testSequences", arduinoGreen + " is going to be green");
+                if (arduinoGreen != null) {
+                    if (arduinoGreen.equalsIgnoreCase(String.valueOf((i + 1)))) {
                         arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.GREEN);
                     } else {
                         arduinoManager.getArduinos().get(i).setStatus(Arduino.TYPE_LIGHT.RED);
@@ -138,7 +143,7 @@ public class StartGamePresenter implements SkillCourtInteractor, ArduinoSkillCou
                 }
             }
             stepCounter++;
-            if (stepCounter % customSteps.size() == 0) stepCounter = 0;
+            if ((stepCounter + 1) % (customSteps.size()+1) == 0) stepCounter = 0;
         }
     }
 

@@ -3,7 +3,9 @@ package fiu.com.skillcourt.ui.startgame;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fiu.com.skillcourt.R;
@@ -18,9 +20,9 @@ public class StartGameActivity extends BaseActivity {
         setContentView(R.layout.activity_base);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (savedInstanceState == null) {
-            HashMap<String, String> sequences = null;
-            if (getIntent().hasExtra(Constants.TAG_SEQUENCE)) sequences = (HashMap<String, String>)getIntent().getSerializableExtra(Constants.TAG_SEQUENCE);
-            replaceFragment(StartGameFragment.newInstance(sequences), false);
+            List<String> sequences = null;
+            if (getIntent().hasExtra(Constants.TAG_SEQUENCE)) sequences = (List<String>) getIntent().getSerializableExtra(Constants.TAG_SEQUENCE);
+            replaceFragment(StartGameFragment.newInstance(new ArrayList<String>(sequences)), false);
         }
         setNavigationToolbar();
     }
