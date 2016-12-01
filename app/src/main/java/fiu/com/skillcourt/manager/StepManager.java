@@ -17,7 +17,7 @@ public class StepManager {
     }
 
     private StepManager() {
-        totalPads = 3;
+        totalPads = 4;
     }
 
     public int getTotalPads() {
