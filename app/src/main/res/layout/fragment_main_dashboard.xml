@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/activity_vertical_margin">
@@ -12,15 +12,40 @@
         android:text="Welcome"/>
 
     <Button
-        android:id="@+id/start_custom_steps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Customize steps"/>
-
-    <Button
         android:id="@+id/start_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start game"/>
+        android:text="Start game"
+        android:layout_below="@+id/tv_welcome"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/start_custom_steps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Customize steps"
+        android:layout_below="@+id/start_game"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Add coaching features"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addCoaching"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Coaching"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/coaching_features"
+        android:layout_below="@+id/start_custom_steps"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible" />
+
+</RelativeLayout>
