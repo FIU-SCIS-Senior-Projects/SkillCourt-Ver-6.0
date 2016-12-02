@@ -48,6 +48,7 @@ public class BaseActivity extends AppCompatActivity implements FragmentListener 
     protected void setNavigationToolbar() {
         setToolbar();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         if (toolbar != null) {
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
