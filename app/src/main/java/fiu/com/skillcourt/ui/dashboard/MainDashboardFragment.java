@@ -1,43 +1,64 @@
 package fiu.com.skillcourt.ui.dashboard;
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.Query;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 import fiu.com.skillcourt.R;
+import fiu.com.skillcourt.adapters.GamesPlayedRecyclerViewAdapter;
+import fiu.com.skillcourt.entities.Game;
 import fiu.com.skillcourt.ui.LauncherActivity;
 import fiu.com.skillcourt.ui.base.BaseFragment;
-import fiu.com.skillcourt.ui.coach_dashboard.CoachingDashboardActivity;
-import fiu.com.skillcourt.ui.dynamicsteps.DynamicStepsActivity;
-import fiu.com.skillcourt.ui.startgame.StartGameActivity;
 
-public class MainDashboardFragment extends BaseFragment {
+public class MainDashboardFragment extends BaseFragment  {
 
-    Button addCoachingFeats;
-    Button coachingFeats;
+    LineChart mChart;
+    List<Entry> entryGamesAccuracy;
+    LineDataSet gamesAccuracy;
+    LineData gamesAccuracyLineData;
 
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
-    DatabaseReference mRoleRef = mRootRef.child("users").child(user.getUid()).child("role");
+    //Firebase database reference
+    FirebaseDatabase mFirebaseDatabase;
+    DatabaseReference mUserDatabaseReference;
+
+    //Objects for graph
+    Date oneWeekAgo;
+    List<Game> gamesThisWeek;
+
+    //Games for list of games played
+    RecyclerView rvHistory;
+    GamesPlayedRecyclerViewAdapter gamesPlayedRecyclerViewAdapter;
+    List<Game> historyGames;
 
     public static MainDashboardFragment newInstance() {
         return new MainDashboardFragment();
@@ -52,98 +73,117 @@ public class MainDashboardFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_main_dashboard, container, false);
+        View view = inflater.inflate(R.layout.fragment_main_dashboard, container, false);
+        mChart = (LineChart) view.findViewById(R.id.chart_dashboard);
+        rvHistory = (RecyclerView) view.findViewById(R.id.rv_past_games);
+        setupChart();
+        setupHistoryView();
+        return view;
     }
+
+    private void setupHistoryView() {
+        historyGames = new ArrayList<>();
+        gamesPlayedRecyclerViewAdapter = new GamesPlayedRecyclerViewAdapter(historyGames);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setSmoothScrollbarEnabled(true);
+        rvHistory.setLayoutManager(layoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvHistory.getContext(),
+                layoutManager.getOrientation());
+        rvHistory.addItemDecoration(dividerItemDecoration);
+        rvHistory.setAdapter(gamesPlayedRecyclerViewAdapter);
+    }
+
+    private void setupChart() {
+        entryGamesAccuracy = new ArrayList<>();
+        mChart.getDescription().setEnabled(false);
+        mChart.setBackgroundColor(Color.TRANSPARENT);
+        mChart.getAxisLeft().setEnabled(true);
+        mChart.getAxisLeft().setSpaceTop(40);
+        mChart.getAxisLeft().setSpaceBottom(40);
+        mChart.getAxisRight().setEnabled(false);
+        YAxis yAxis = mChart.getAxisLeft();
+        yAxis.setDrawGridLines(false);
+        yAxis.setDrawAxisLine(true);
+        yAxis.setGranularity(1f);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setDrawAxisLine(true);
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawLabels(false);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH)-7);
+        oneWeekAgo = cal.getTime();
+
+        gamesThisWeek = new ArrayList<>();
+
+    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        addCoachingFeats = (Button) getView().findViewById(R.id.addCoaching);
-        coachingFeats = (Button) getView().findViewById(R.id.coaching_features);
-
-        String email = user.getEmail();
-        if (email != null) {
-            TextView tvWelcome = (TextView) getView().findViewById(R.id.tv_welcome);
-            tvWelcome.setText("Welcome " + email);
-        }
-        Button startCustomSteps = (Button) getView().findViewById(R.id.start_custom_steps);
-        startCustomSteps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), DynamicStepsActivity.class);
-                startActivity(intent);
-            }
-        });
-        Button startGame = (Button) getView().findViewById(R.id.start_game);
-        startGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), StartGameActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        addCoachingFeats.setOnClickListener(new View.OnClickListener() {
-
-            //ADD ALERT VIEW
-            @Override
-            public void onClick(View v) {
-
-                Context context = getActivity();
-
-                AlertDialog ad = new AlertDialog.Builder(context)
-                        .create();
-                ad.setCancelable(false);
-                ad.setTitle("Do you want to be a coach?");
-                ad.setMessage("You will have access to create teams, look for other users, etc.");
-                ad.setButton(context.getString(R.string.ok_text), new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        mRoleRef.setValue("coach");
-                        dialog.dismiss();
-                    }
-                });
-                ad.show();
-
-
-
-            }
-        });
-
-        coachingFeats.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), CoachingDashboardActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUserDatabaseReference = mFirebaseDatabase.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        getHistoryGames();
+        getGamesLastWeek();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void getGamesLastWeek() {
+        DatabaseReference mGameDatabaseReference = mUserDatabaseReference
+                .child("games");
+        Query query = mGameDatabaseReference
+                .orderByChild("date")
+                .startAt(oneWeekAgo.getTime())
+                .endAt(new Date().getTime());
 
-        mRoleRef.addValueEventListener(new ValueEventListener() {
+        ChildEventListener mChildEventListener = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String userRole = dataSnapshot.getValue(String.class);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Game game = dataSnapshot.getValue(Game.class);
+                gamesThisWeek.add(game);
+                updateChart();
+            }
 
-                if (userRole.equals("coach")) {
-                    coachingFeats.setVisibility(View.VISIBLE);
-                    addCoachingFeats.setVisibility(View.INVISIBLE);
-                } else {
-                    coachingFeats.setVisibility(View.INVISIBLE);
-                    addCoachingFeats.setVisibility(View.VISIBLE);
-                }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        };
+        query.addChildEventListener(mChildEventListener);
+    }
+
+    private void updateChart() {
+        int index = entryGamesAccuracy.size();
+        entryGamesAccuracy.add(new Entry(index, gamesThisWeek.get(index).getScore()));
+        if (gamesAccuracyLineData == null) {
+            gamesAccuracy = new LineDataSet(entryGamesAccuracy, "Accuracy");
+            gamesAccuracy.disableDashedLine();
+            gamesAccuracy.setCircleColor(getContext().getResources().getColor(R.color.colorAccent));
+            gamesAccuracy.setColor(getContext().getResources().getColor(R.color.colorAccent));
+            gamesAccuracyLineData = new LineData(gamesAccuracy);
+            mChart.setData(gamesAccuracyLineData);
+        }
+        gamesAccuracyLineData.notifyDataChanged();
+        mChart.invalidate();
+        mChart.fitScreen();
     }
 
     @Override
@@ -166,4 +206,44 @@ public class MainDashboardFragment extends BaseFragment {
     }
 
 
+    public void getHistoryGames() {
+        DatabaseReference mGameDatabaseReference = mUserDatabaseReference
+                .child("games");
+        Query query = mGameDatabaseReference
+                .orderByChild("date");
+
+        ChildEventListener mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Game game = dataSnapshot.getValue(Game.class);
+                historyGames.add(game);
+                updateHistoryGames();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        query.addChildEventListener(mChildEventListener);
+    }
+
+    private void updateHistoryGames() {
+        gamesPlayedRecyclerViewAdapter.notifyDataSetChanged();
+    }
 }
