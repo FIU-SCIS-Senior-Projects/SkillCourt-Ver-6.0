@@ -16,4 +16,15 @@
     </string>
     <string name="title_activity_dynamic_steps">DynamicStepsActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="ok_text">OK!</string>
+    <string name="add_text">ADD!</string>
+    <string name="search_title">Search Users</string>
+    <string name="search_hint">Type user\'s email address</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_coaching_dashboard">Your teams</string>
+    <string name="save">Save</string>
+    <string name="new_team_desc_hint">Description of your new team (optional)</string>
+    <string name="new_team_name_hint">New team name</string>
 </resources>
