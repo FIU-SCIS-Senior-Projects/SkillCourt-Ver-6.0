@@ -41,8 +41,7 @@ import java.util.Map;
 
 
 /**
- * Created by pedrocarrillo on 11/21/16.
- * Created by pedrocarrillo on 11/21/16.
+ * Created by April Perry
  */
 
 public class HitsFragment extends BaseFragment {
@@ -97,8 +96,7 @@ public class HitsFragment extends BaseFragment {
                     Object total = map.get((Object) "totalHits");
                     totalList.add((Long) total);
                 }
-                System.out.println(" green:" + greenList + "  totals:" + totalList + "  dates:" + datesList);
-                createBarGraph(totalList, greenList, datesList);
+              createBarGraph(totalList, greenList, datesList);
             }
 
             @Override
@@ -108,6 +106,11 @@ public class HitsFragment extends BaseFragment {
     }
 
     protected void createBarGraph(ArrayList<Long> totalList, ArrayList<Long> greenList, ArrayList<Long> datesList) {
+
+        if ( (greenList.size() == 0) || (totalList.size() == 0) || (datesList.size() ==0) ) {
+            return;
+        }
+
         BarChart bchart = (BarChart) getView().findViewById(R.id.bChart);
         bchart.setBackgroundColor(Color.TRANSPARENT);
         bchart.setTouchEnabled(true);
@@ -133,8 +136,6 @@ public class HitsFragment extends BaseFragment {
             values[j] = simpleDateFormat.format(date).toString().substring(5,7) +"/" + simpleDateFormat.format(date).toString().substring(8,10);
         }
 
-        // bchart.getAxisRight().setAxisMinimum(0);
-        // bchart.getXAxis().setValueFormatter(MyXAxisValueFormatter);
         bchart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         bchart.getXAxis().setAxisMinimum(0);
 
@@ -144,15 +145,12 @@ public class HitsFragment extends BaseFragment {
         bchart.getAxisLeft().setDrawGridLines(false);
         bchart.getAxisRight().setDrawGridLines(false);
 
-        // bData.setValueFormatter(new MyXAxisValueFormatter(values));
-
         XAxis newX = bchart.getXAxis();
         newX.setValueFormatter(new MyXAxisValueFormatter(values));
 
         bchart.setData(bData);
         bchart.groupBars(0, .07f, .01f);
         bchart.invalidate();
-
     }
 
 
@@ -168,7 +166,6 @@ public class HitsFragment extends BaseFragment {
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
             return mValues[(int) value];
-
         }
 
         @Override
@@ -181,9 +178,4 @@ public class HitsFragment extends BaseFragment {
             return null;
         }
     }
-
-
-
 }
-
-
