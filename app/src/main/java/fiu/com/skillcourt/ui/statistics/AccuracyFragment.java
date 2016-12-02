@@ -46,11 +46,10 @@ import java.util.Map;
 
 
 /**
- * Created by pedrocarrillo on 11/21/16.
+ * Created by April Perry
  */
 
 public class AccuracyFragment extends BaseFragment {
-
 
     protected FirebaseAuth mAuth;
     protected FirebaseAuth.AuthStateListener mAuthListener;
@@ -88,7 +87,6 @@ public class AccuracyFragment extends BaseFragment {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Map<String, String> map = (Map<String, String>) postSnapshot.getValue();
 
-
                     Object date = map.get((Object) "date");
                     datesList.add((Long) date);
 
@@ -96,7 +94,6 @@ public class AccuracyFragment extends BaseFragment {
                     accuracyList.add((Long) accuracy);
 
                 }
-                System.out.println("acc" + accuracyList +  "dates1:" + datesList );
                 createLineGraph(accuracyList, datesList);
             }
 
@@ -104,10 +101,15 @@ public class AccuracyFragment extends BaseFragment {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        
     }
 
     protected void createLineGraph(ArrayList<Long> accuracyList, ArrayList<Long> datesList)
     {
+
+        if ( (datesList.size() == 0) || (accuracyList.size() == 0) ) {
+            return;
+        }
         LineChart chart = (LineChart) getView().findViewById(R.id.chart);
         chart.setBackgroundColor(Color.TRANSPARENT);
         chart.setTouchEnabled(true);
@@ -168,9 +170,7 @@ public class AccuracyFragment extends BaseFragment {
                 values[j] = simpleDateFormat.format(date).toString().substring(5,7) +"/" + simpleDateFormat.format(date).toString().substring(8,10);
         }
 
-
         xAxis.setValueFormatter(new MyXAxisValueFormatter(values));
-
 
         chart.animateXY(3000, 3000);
         chart.invalidate(); // refresh
