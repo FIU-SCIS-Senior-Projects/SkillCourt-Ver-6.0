@@ -1,57 +1,41 @@
 package fiu.com.skillcourt.ui.statistics;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+        import android.os.Bundle;
+        import android.support.annotation.Nullable;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
 
-import fiu.com.skillcourt.R;
-import fiu.com.skillcourt.ui.base.BaseActivity;
-import fiu.com.skillcourt.ui.base.BaseFragment;
+        import fiu.com.skillcourt.R;
+        import fiu.com.skillcourt.ui.base.BaseActivity;
+        import fiu.com.skillcourt.ui.base.BaseFragment;
 
-import android.graphics.Color;
-import android.os.Bundle;
-import android.widget.TextView;
+        import android.graphics.Color;
+        import android.os.Bundle;
+        import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.auth.FirebaseUser;
+        import com.google.firebase.database.DataSnapshot;
+        import com.google.firebase.database.DatabaseError;
+        import com.google.firebase.database.DatabaseReference;
+        import com.google.firebase.database.FirebaseDatabase;
+        import com.google.firebase.database.ValueEventListener;
 
-
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.Map;
+        import java.util.ArrayList;
+        import java.util.Map;
 
 
 /**
- * Created by pedrocarrillo on 11/21/16.
+ * Created by April Perry
  */
 
 public class StatisticsFragment extends BaseFragment {
 
-    ArrayList<Long> scoresList = new ArrayList<Long>();
-    ArrayList<Long> datesList = new ArrayList<Long>();
+
     ArrayList<Long> greenList = new ArrayList<Long>();
     ArrayList<Long> totalList = new ArrayList<Long>();
-    ArrayList<Long> timeList = new ArrayList<Long>();
+
 
     protected FirebaseAuth mAuth;
     protected FirebaseAuth.AuthStateListener mAuthListener;
@@ -73,47 +57,33 @@ public class StatisticsFragment extends BaseFragment {
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                scoresList.clear();
-                datesList.clear();
+                
                 greenList.clear();
                 totalList.clear();
-                timeList.clear();
 
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Map<String, String> map = (Map<String, String>) postSnapshot.getValue();
 
-                    Object score = map.get((Object) "score");
-                    scoresList.add((Long) score);
-
-                    //Object date = map.get((Object) "date");
-                    //datesList.add((Long) date);
-
                     Object red = map.get((Object) "greenHits");
                     greenList.add((Long) red);
-
+                    
                     Object total = map.get((Object) "totalHits");
                     totalList.add((Long) total);
-
-                    //Object times = map.get((Object) "gameTimeTotal");
-                    //timeList.add((Long) times);
                 }
-
                 createHitIcons(greenList, totalList);
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
+        
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     protected  void createHitIcons (ArrayList<Long> greenHits, ArrayList<Long> totalHits)
@@ -131,19 +101,16 @@ public class StatisticsFragment extends BaseFragment {
         int totalRed = 0;
         int totalPoints = 0;
 
-        for (int i=0; i < greenHits.size(); i++) {
-            totalGreen = totalGreen + Integer.parseInt(greenHits.get(i).toString());
-            totalPoints = Integer.parseInt(totalHits.get(i).toString());
+        if ((greenList.size() != 0) || (totalList.size() != 0)) {
+            for (int i = 0; i < greenHits.size(); i++) {
+                totalGreen = totalGreen + Integer.parseInt(greenHits.get(i).toString());
+                totalPoints = Integer.parseInt(totalHits.get(i).toString());
+            }
+            totalRed = totalPoints - totalGreen;
         }
-
-        totalRed = totalPoints - totalGreen;
-
 
         greenTV.setText(Long.toString(totalGreen)); //leave this line to assign a specific text
         redTV.setText(Long.toString(totalRed)); //leave this line to assign a specific text
         pointsTV.setText(Long.toString(totalPoints)); //leave this line to assign a specific text
     }
-
 }
-
-
