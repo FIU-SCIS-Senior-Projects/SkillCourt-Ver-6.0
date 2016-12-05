@@ -17,8 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import fiu.com.skillcourt.R;
@@ -51,7 +53,7 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference userDatabaseReference;
 
-    public static StartGameFragment newInstance(HashMap<String, String> sequences) {
+    public static StartGameFragment newInstance(ArrayList<String> sequences) {
         StartGameFragment startGameFragment = new StartGameFragment();
         if (sequences != null) {
             Bundle bundle = new Bundle();
@@ -64,10 +66,10 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        HashMap<String, String> sequences = new HashMap<>();
+        List<String> sequences = new ArrayList<>();
         if (getArguments() != null) {
             if (getArguments().containsKey(Constants.TAG_SEQUENCE))
-                sequences = (HashMap<String, String>) getArguments().getSerializable(Constants.TAG_SEQUENCE);
+                sequences = (ArrayList) getArguments().getSerializable(Constants.TAG_SEQUENCE);
         }
         startGamePresenter = new StartGamePresenter(this, sequences);
         firebaseDatabase = FirebaseDatabase.getInstance();
