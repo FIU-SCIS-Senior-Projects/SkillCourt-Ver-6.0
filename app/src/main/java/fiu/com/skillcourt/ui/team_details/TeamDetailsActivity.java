@@ -16,8 +16,6 @@ public class TeamDetailsActivity extends BaseActivity {
 
         String teamID = getIntent().getExtras().getString("teamID");
 
-        Log.i("PARAMETRO",""+teamID);
-
         if (savedInstanceState == null) {
             replaceFragment(TeamDetailsFragment.newInstance(teamID), false);
         }

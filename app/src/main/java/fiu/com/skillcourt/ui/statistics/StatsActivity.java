@@ -26,6 +26,7 @@ public class StatsActivity extends BaseActivity  {
 
     FragmentPagerAdapter adapterViewPager;
     ViewPager vpPager;
+    static String playerID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,12 @@ public class StatsActivity extends BaseActivity  {
         vpPager = (ViewPager) findViewById(R.id.vpPager);
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
+
+        // Get the extras (if there are any)
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            playerID = extras.getString("playerID");
+        }
     }
 
 
@@ -54,11 +61,11 @@ public class StatsActivity extends BaseActivity  {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    return StatisticsFragment.newInstance();
+                    return StatisticsFragment.newInstance(playerID);
                 case 1: // Fragment # 0 - This will show FirstFragment different title
-                    return AccuracyFragment.newInstance();
+                    return AccuracyFragment.newInstance(playerID);
                 case 2: // Fragment # 1 - This will show SecondFragment
-                    return HitsFragment.newInstance();
+                    return HitsFragment.newInstance(playerID);
                 default:
                     return null;
             }

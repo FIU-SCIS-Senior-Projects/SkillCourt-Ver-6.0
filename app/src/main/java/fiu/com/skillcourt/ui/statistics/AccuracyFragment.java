@@ -56,8 +56,28 @@ public class AccuracyFragment extends BaseFragment {
     ArrayList<Long> datesList = new ArrayList<Long>();
     ArrayList<Long> accuracyList = new ArrayList<Long>();
 
-    public static AccuracyFragment newInstance() {
-        return new AccuracyFragment();
+    private static final String ARG_PLAYERID = "playerID";
+    private String mPlayerID;
+
+    public static AccuracyFragment newInstance(String playerID) {
+
+        AccuracyFragment fragment = new AccuracyFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PLAYERID, playerID);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mPlayerID = getArguments().getString(ARG_PLAYERID);
+        } else {
+            mPlayerID = null;
+        }
     }
 
     @Override
@@ -76,8 +96,16 @@ public class AccuracyFragment extends BaseFragment {
         accuracyList.clear();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userID;
+
+        if(mPlayerID != null){
+            userID = mPlayerID;
+        } else {
+            userID = user.getUid();
+        }
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("users/" + user.getUid()).child("games");
+        final DatabaseReference myRef = database.getReference("users/" + userID).child("games");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -106,6 +134,10 @@ public class AccuracyFragment extends BaseFragment {
 
     protected void createLineGraph(ArrayList<Long> accuracyList, ArrayList<Long> datesList)
     {
+        if ( (datesList.size() == 0) || (accuracyList.size() == 0) ) {
+            return;
+        }
+
         LineChart chart = (LineChart) getView().findViewById(R.id.chart);
         chart.setBackgroundColor(Color.TRANSPARENT);
         chart.setTouchEnabled(true);

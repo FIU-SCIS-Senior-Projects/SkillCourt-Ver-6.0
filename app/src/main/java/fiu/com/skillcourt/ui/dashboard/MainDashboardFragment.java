@@ -1,5 +1,8 @@
 package fiu.com.skillcourt.ui.dashboard;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +54,7 @@ public class MainDashboardFragment extends BaseFragment  {
     //Firebase database reference
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mUserDatabaseReference;
+    DatabaseReference mRoleRef;
 
     //Objects for graph
     Date oneWeekAgo;
@@ -127,6 +132,7 @@ public class MainDashboardFragment extends BaseFragment  {
         super.onActivityCreated(savedInstanceState);
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserDatabaseReference = mFirebaseDatabase.getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        mRoleRef = mUserDatabaseReference.child("role");
         getHistoryGames();
         getGamesLastWeek();
     }
@@ -190,6 +196,7 @@ public class MainDashboardFragment extends BaseFragment  {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        showCoachOptions(menu);
     }
 
     @Override
@@ -200,6 +207,22 @@ public class MainDashboardFragment extends BaseFragment  {
                 Intent intent = new Intent(getActivity(), LauncherActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.addCoaching:
+                Context context = getActivity();
+
+                AlertDialog ad = new AlertDialog.Builder(context)
+                        .create();
+                ad.setCancelable(false);
+                ad.setTitle("Do you want to be a coach?");
+                ad.setMessage("You will have access to create teams, look for other users, etc.");
+                ad.setButton(context.getString(R.string.ok_text), new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        mRoleRef.setValue("coach");
+                        dialog.dismiss();
+                    }
+                });
+                ad.show();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -245,5 +268,26 @@ public class MainDashboardFragment extends BaseFragment  {
 
     private void updateHistoryGames() {
         gamesPlayedRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    public void showCoachOptions(final Menu menu){
+
+        mRoleRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userRole = dataSnapshot.getValue(String.class);
+
+                if (userRole.equals("coach")) {
+                    menu.findItem(R.id.addCoaching).setVisible(false);
+                }else {
+                    menu.findItem(R.id.addCoaching).setVisible(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

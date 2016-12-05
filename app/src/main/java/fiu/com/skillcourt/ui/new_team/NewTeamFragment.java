@@ -74,6 +74,9 @@ public class NewTeamFragment extends BaseFragment {
                     public void onClick(View v) {
                         newTeamRef.child("name").setValue(tv_team_name.getText().toString());
                         newTeamRef.child("description").setValue(tv_team_desc.getText().toString());
+
+                       // getFragmentManager().popBackStackImmediate();
+                        getActivity().onBackPressed();
                         //TODO: give confirmation of added team and return to list of teams
                     }
                 }

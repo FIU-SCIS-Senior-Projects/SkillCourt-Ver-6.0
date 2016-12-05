@@ -45,21 +45,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fiu.com.skillcourt.ui.base.BaseActivity" />
         </activity>
-        <activity
-            android:name=".ui.coach_dashboard.CoachingDashboardActivity"
-            android:label="@string/title_activity_coaching_dashboard"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".ui.coach_dashboard.CoachingDashboardActivity"/>
         <activity android:name=".ui.new_team.NewTeam" />
         <activity android:name=".ui.search_user.SearchUserActivity" />
-        <activity android:name=".ui.team_details.TeamDetailsActivity"></activity>
+        <activity android:name=".ui.team_details.TeamDetailsActivity"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

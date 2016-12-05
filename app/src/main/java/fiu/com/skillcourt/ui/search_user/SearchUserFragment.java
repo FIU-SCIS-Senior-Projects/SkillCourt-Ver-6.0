@@ -40,6 +40,8 @@ import fiu.com.skillcourt.ui.team_details.TeamDetailsActivity;
 
 
 public class SearchUserFragment extends Fragment {
+    private static final String ARG_TEAMID = "teamID";
+    private String mTeamID;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
@@ -52,9 +54,10 @@ public class SearchUserFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SearchUserFragment newInstance() {
+    public static SearchUserFragment newInstance(String teamID) {
         SearchUserFragment fragment = new SearchUserFragment();
         Bundle args = new Bundle();
+        args.putString(ARG_TEAMID, teamID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,6 +65,11 @@ public class SearchUserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            mTeamID = getArguments().getString(ARG_TEAMID);
+        }
+
         setHasOptionsMenu(true);
     }
 
@@ -104,6 +112,8 @@ public class SearchUserFragment extends Fragment {
                                                     Player player = new Player(id,email);
                                                     playersResultList.add(player);
                                                 }
+
+                                                showResultList();
                                             }
 
                                             @Override
@@ -121,6 +131,9 @@ public class SearchUserFragment extends Fragment {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(componentName));
 
+    }
+
+    public void showResultList(){
         ArrayAdapter<Player> arrayAdapter = new ArrayAdapter<Player>(getContext(), android.R.layout.simple_list_item_1, playersResultList);
 
         listViewPlayersResult.setAdapter(arrayAdapter);
@@ -145,21 +158,15 @@ public class SearchUserFragment extends Fragment {
                 ad.setButton(getContext().getString(R.string.add_text), new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
-                        mUserRef.child(user.getUid()).child("teams").child("-KXqIoNMliQ__SNixgJc")
+                        mUserRef.child(user.getUid()).child("teams").child(mTeamID)
                                 .child("roster").child(selectedPlayerID).setValue(input.getText().toString());
                         dialog.dismiss();
+                        getActivity().onBackPressed();
                     }
                 });
                 ad.show();
-
-
-//                Intent intent = new Intent(getActivity(), TeamDetailsActivity.class);
-//                intent.putExtra("teamID",selectedTeamID);
-//                startActivity(intent);
-
             }
         });
-
     }
 
     static class Player{

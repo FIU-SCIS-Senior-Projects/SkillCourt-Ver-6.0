@@ -53,11 +53,30 @@ public class StatisticsFragment extends BaseFragment {
     ArrayList<Long> totalList = new ArrayList<Long>();
     ArrayList<Long> timeList = new ArrayList<Long>();
 
+    private static final String ARG_PLAYERID = "playerID";
+    private String mPlayerID;
+
     protected FirebaseAuth mAuth;
     protected FirebaseAuth.AuthStateListener mAuthListener;
 
-    public static StatisticsFragment newInstance() {
-        return new StatisticsFragment();
+    public static StatisticsFragment newInstance(String playerID) {
+        StatisticsFragment fragment = new StatisticsFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PLAYERID, playerID);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mPlayerID = getArguments().getString(ARG_PLAYERID);
+        } else {
+            mPlayerID = null;
+        }
     }
 
     @Override
@@ -65,10 +84,18 @@ public class StatisticsFragment extends BaseFragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userID;
+
+        if(mPlayerID != null){
+            userID = mPlayerID;
+        } else {
+            userID = user.getUid();
+        }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("users/" + user.getUid()).child("games");
+        final DatabaseReference myRef = database.getReference("users/" + userID).child("games");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -120,8 +147,17 @@ public class StatisticsFragment extends BaseFragment {
     {
 
         TextView toChange = (TextView) getView().findViewById(R.id.gamesPlayed);
-        toChange.setText("I've Played  " + greenHits.size() + "  SkillCourt games! " +
-                " Wow!");
+
+        if(mPlayerID != null){
+            toChange.setText("This player have played  " + greenHits.size() + "  SkillCourt games! " +
+                    " Wow!");
+        } else {
+            toChange.setText("I've Played  " + greenHits.size() + "  SkillCourt games! " +
+                    " Wow!");
+        }
+
+
+
 
         TextView greenTV = (TextView) getView().findViewById(R.id.greenhits);
         TextView redTV = (TextView) getView().findViewById(R.id.redhits);
@@ -130,14 +166,14 @@ public class StatisticsFragment extends BaseFragment {
         int totalGreen = 0;
         int totalRed = 0;
         int totalPoints = 0;
+        if ((greenList.size() != 0) || (totalList.size() != 0)) {
+            for (int i = 0; i < greenHits.size(); i++) {
+                totalGreen = totalGreen + Integer.parseInt(greenHits.get(i).toString());
+                totalPoints = Integer.parseInt(totalHits.get(i).toString());
+            }
 
-        for (int i=0; i < greenHits.size(); i++) {
-            totalGreen = totalGreen + Integer.parseInt(greenHits.get(i).toString());
-            totalPoints = Integer.parseInt(totalHits.get(i).toString());
+            totalRed = totalPoints - totalGreen;
         }
-
-        totalRed = totalPoints - totalGreen;
-
 
         greenTV.setText(Long.toString(totalGreen)); //leave this line to assign a specific text
         redTV.setText(Long.toString(totalRed)); //leave this line to assign a specific text

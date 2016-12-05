@@ -52,8 +52,27 @@ public class HitsFragment extends BaseFragment {
     ArrayList<Long> greenList = new ArrayList<Long>();
     ArrayList<Long> totalList = new ArrayList<Long>();
 
-    public static HitsFragment newInstance() {
-        return new HitsFragment();
+    private static final String ARG_PLAYERID = "playerID";
+    private String mPlayerID;
+
+    public static HitsFragment newInstance(String playerID) {
+        HitsFragment fragment = new HitsFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PLAYERID, playerID);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mPlayerID = getArguments().getString(ARG_PLAYERID);
+        } else {
+            mPlayerID = null;
+        }
     }
 
     @Override
@@ -76,9 +95,16 @@ public class HitsFragment extends BaseFragment {
         totalList.clear();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userID;
+
+        if(mPlayerID != null){
+            userID = mPlayerID;
+        } else {
+            userID = user.getUid();
+        }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("users/" + user.getUid()).child("games");
+        final DatabaseReference myRef = database.getReference("users/" + userID).child("games");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -109,6 +135,11 @@ public class HitsFragment extends BaseFragment {
     }
 
     protected void createBarGraph(ArrayList<Long> totalList, ArrayList<Long> greenList, ArrayList<Long> datesList) {
+
+        if ( (greenList.size() == 0) || (totalList.size() == 0) || (datesList.size() ==0) ) {
+            return;
+        }
+
         BarChart bchart = (BarChart) getView().findViewById(R.id.bChart);
         bchart.setBackgroundColor(Color.TRANSPARENT);
         bchart.setTouchEnabled(true);

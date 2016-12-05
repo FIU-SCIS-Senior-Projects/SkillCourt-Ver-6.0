@@ -29,6 +29,7 @@ import fiu.com.skillcourt.ui.base.BaseFragment;
 import fiu.com.skillcourt.ui.coach_dashboard.CoachingFragment;
 import fiu.com.skillcourt.ui.new_team.NewTeam;
 import fiu.com.skillcourt.ui.search_user.SearchUserActivity;
+import fiu.com.skillcourt.ui.statistics.StatsActivity;
 
 
 public class TeamDetailsFragment extends BaseFragment {
@@ -41,7 +42,7 @@ public class TeamDetailsFragment extends BaseFragment {
     TextView tv_team_name;
     TextView tv_team_desc;
 
-    List<String> rosterList = new ArrayList<>();
+    List<Player> rosterList = new ArrayList<>();
 
     public TeamDetailsFragment() {
         // Required empty public constructor
@@ -49,9 +50,11 @@ public class TeamDetailsFragment extends BaseFragment {
 
     public static TeamDetailsFragment newInstance(String teamID) {
         TeamDetailsFragment fragment = new TeamDetailsFragment();
+
         Bundle args = new Bundle();
         args.putString(ARG_TEAMID, teamID);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -111,8 +114,9 @@ public class TeamDetailsFragment extends BaseFragment {
                     public void onDataChange(DataSnapshot snapshot) {
                         rosterList.clear();
                         for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                            String playerID = postSnapshot.getValue(String.class);
-                            rosterList.add(playerID);
+                            String playerNickname = postSnapshot.getValue(String.class);
+                            Player player = new Player(postSnapshot.getKey(), playerNickname);
+                            rosterList.add(player);
                         }
                     }
 
@@ -122,17 +126,16 @@ public class TeamDetailsFragment extends BaseFragment {
                     }
                 });
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, rosterList);
+        ArrayAdapter<Player> arrayAdapter = new ArrayAdapter<Player>(getContext(), android.R.layout.simple_list_item_1, rosterList);
 
         lv_team_roster.setAdapter(arrayAdapter);
 
         lv_team_roster.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
-                //TODO Send to April's activity to watch history
-                /*String selectedTeamID = teamList.get(position).getId();
-                Intent intent = new Intent(getActivity(), TeamDetailsActivity.class);
-                intent.putExtra("teamID",selectedTeamID);
-                startActivity(intent);*/
+                String selectedUserID = rosterList.get(position).getId();
+                Intent intent = new Intent(getActivity(), StatsActivity.class);
+                intent.putExtra("playerID",selectedUserID);
+                startActivity(intent);
 
             }
         });
@@ -141,8 +144,44 @@ public class TeamDetailsFragment extends BaseFragment {
         myFabAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), SearchUserActivity.class);
+                intent.putExtra("teamID",mTeamID);
                 startActivity(intent);
             }
         });
+    }
+
+
+    static class Player{
+        String id;
+        String nickname;
+
+        public Player() {
+        }
+
+        public Player(String id, String nickname) {
+            this.id = id;
+            this.nickname = nickname;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getNickname() {
+            return nickname;
+        }
+
+        public void setMickname(String nickname) {
+            this.nickname = nickname;
+        }
+
+        @Override
+        public String toString() {
+            return nickname;
+        }
     }
 }

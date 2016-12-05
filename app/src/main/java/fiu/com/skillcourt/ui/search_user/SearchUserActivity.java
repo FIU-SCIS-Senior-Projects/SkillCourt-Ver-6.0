@@ -17,8 +17,11 @@ public class SearchUserActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        String teamID = getIntent().getExtras().getString("teamID");
+
         if (savedInstanceState == null) {
-            replaceFragment(SearchUserFragment.newInstance(), false);
+            replaceFragment(SearchUserFragment.newInstance(teamID), false);
         }
         setToolbar();
     }
