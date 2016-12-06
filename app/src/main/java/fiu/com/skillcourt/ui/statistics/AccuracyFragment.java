@@ -39,17 +39,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 
 /**
- * Created by April Perry
+ * Created by pedrocarrillo on 11/21/16.
  */
 
 public class AccuracyFragment extends BaseFragment {
+
 
     protected FirebaseAuth mAuth;
     protected FirebaseAuth.AuthStateListener mAuthListener;
@@ -57,8 +56,28 @@ public class AccuracyFragment extends BaseFragment {
     ArrayList<Long> datesList = new ArrayList<Long>();
     ArrayList<Long> accuracyList = new ArrayList<Long>();
 
-    public static AccuracyFragment newInstance() {
-        return new AccuracyFragment();
+    private static final String ARG_PLAYERID = "playerID";
+    private String mPlayerID;
+
+    public static AccuracyFragment newInstance(String playerID) {
+
+        AccuracyFragment fragment = new AccuracyFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PLAYERID, playerID);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mPlayerID = getArguments().getString(ARG_PLAYERID);
+        } else {
+            mPlayerID = null;
+        }
     }
 
     @Override
@@ -77,8 +96,16 @@ public class AccuracyFragment extends BaseFragment {
         accuracyList.clear();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userID;
+
+        if(mPlayerID != null){
+            userID = mPlayerID;
+        } else {
+            userID = user.getUid();
+        }
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference myRef = database.getReference("users/" + user.getUid()).child("games");
+        final DatabaseReference myRef = database.getReference("users/" + userID).child("games");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,6 +114,7 @@ public class AccuracyFragment extends BaseFragment {
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Map<String, String> map = (Map<String, String>) postSnapshot.getValue();
 
+
                     Object date = map.get((Object) "date");
                     datesList.add((Long) date);
 
@@ -94,6 +122,7 @@ public class AccuracyFragment extends BaseFragment {
                     accuracyList.add((Long) accuracy);
 
                 }
+                System.out.println("acc" + accuracyList +  "dates1:" + datesList );
                 createLineGraph(accuracyList, datesList);
             }
 
@@ -101,15 +130,14 @@ public class AccuracyFragment extends BaseFragment {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-        
     }
 
     protected void createLineGraph(ArrayList<Long> accuracyList, ArrayList<Long> datesList)
     {
-
         if ( (datesList.size() == 0) || (accuracyList.size() == 0) ) {
             return;
         }
+
         LineChart chart = (LineChart) getView().findViewById(R.id.chart);
         chart.setBackgroundColor(Color.TRANSPARENT);
         chart.setTouchEnabled(true);
@@ -161,17 +189,15 @@ public class AccuracyFragment extends BaseFragment {
         chart.getAxisRight().setEnabled(false);
         xAxis.setGranularity(1f);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
         // set bottom axis values
         String[] values = new String[datesList.size()];
         for (int j=0; j < datesList.size(); j++) {
-                Date date = new Date(datesList.get(j));
-                values[j] = simpleDateFormat.format(date).toString().substring(5,7) +"/" + simpleDateFormat.format(date).toString().substring(8,10);
+            values[j] = datesList.get(j).toString().substring(0, 2) + "/" + datesList.get(j).toString().substring(2, 4) + "/" + datesList.get(j).toString().substring(4, 6);
         }
-
         xAxis.setValueFormatter(new MyXAxisValueFormatter(values));
 
+        //  Legend l = chart.getLegend();
+        //  l.setForm(Legend.LegendForm.LINE);
         chart.animateXY(3000, 3000);
         chart.invalidate(); // refresh
     }

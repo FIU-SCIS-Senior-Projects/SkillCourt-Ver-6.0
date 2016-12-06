@@ -28,6 +28,7 @@
     <string name="home_title">Home</string>
     <string name="dynamic_seq_title">Dynamic Sequences</string>
     <string name="Statistics">Statistics</string>
+    <string name="Coaching">Coaching</string>
     <string name="score_placeholder">Score: %s</string>
     <string name="accuracy_placeholder">Accuracy: %s \%</string>
     <string name="game_mode_placeholder">Game mode: %s</string>
@@ -38,4 +39,15 @@
         <item>Hit mode</item>
     </string-array>
 
+    <string name="ok_text">OK!</string>
+    <string name="add_text">ADD!</string>
+    <string name="search_title">Search Users</string>
+    <string name="search_hint">Type user\'s email address</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_coaching_dashboard">Your teams</string>
+    <string name="save">Save</string>
+    <string name="new_team_desc_hint">Description of your new team (optional)</string>
+    <string name="new_team_name_hint">New team name</string>
 </resources>
