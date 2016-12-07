@@ -20,6 +20,12 @@
             android:title="Statistics"
             android:checked="false" />
 
+        <item
+            android:id="@+id/coaching_features"
+            android:icon="@drawable/ic_hourglass_empty_black_24dp"
+            android:title="Coaching"
+            android:checked="false" />
+
     </group>
 
     <group>

@@ -64,7 +64,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference sequences =database.getReference("sequences");
     String defaultKey="";
-    HashMap<String,HashMap<String,String>> defaultSequence = new HashMap<String, HashMap<String,String>>();
+    HashMap<String,String> defaultSequence = new HashMap<String, String>();
 
     NumberPickerFragment numberPickerFragment = new NumberPickerFragment();
 
@@ -145,7 +145,7 @@ public class CreateGameFragment extends ArduinosStartCommunicationFragment imple
                         SkillCourtManager.getInstance().getGame().setTimeObjective(frequencyTime);
                     }
                     Intent intent = new Intent(getActivity(), StartGameActivity.class);
-                    intent.putExtra(Constants.TAG_SEQUENCE, defaultSequence.get("sequence"));
+                    intent.putExtra(Constants.TAG_SEQUENCE, defaultSequence);
                     startActivity(intent);
                     fragmentListener.closeActivity();
                 } else {

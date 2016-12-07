@@ -34,18 +34,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 
 
 /**
  * Created by pedrocarrillo on 11/21/16.
- * Created by pedrocarrillo on 11/21/16.
  */
 
 public class HitsFragment extends BaseFragment {
+
 
     protected FirebaseAuth mAuth;
     protected FirebaseAuth.AuthStateListener mAuthListener;
@@ -54,8 +52,27 @@ public class HitsFragment extends BaseFragment {
     ArrayList<Long> greenList = new ArrayList<Long>();
     ArrayList<Long> totalList = new ArrayList<Long>();
 
-    public static HitsFragment newInstance() {
-        return new HitsFragment();
+    private static final String ARG_PLAYERID = "playerID";
+    private String mPlayerID;
+
+    public static HitsFragment newInstance(String playerID) {
+        HitsFragment fragment = new HitsFragment();
+
+        Bundle args = new Bundle();
+        args.putString(ARG_PLAYERID, playerID);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mPlayerID = getArguments().getString(ARG_PLAYERID);
+        } else {
+            mPlayerID = null;
+        }
     }
 
     @Override
@@ -72,14 +89,22 @@ public class HitsFragment extends BaseFragment {
         TextView toChange = (TextView) view.findViewById(R.id.hitsTitle);
         toChange.setText("Game Stats: Green Hits vs. Red Hits!");
 
+
         datesList.clear();
         greenList.clear();
         totalList.clear();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        String userID;
 
-        final DatabaseReference myRef = database.getReference("users/" + user.getUid()).child("games");
+        if(mPlayerID != null){
+            userID = mPlayerID;
+        } else {
+            userID = user.getUid();
+        }
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("users/" + userID).child("games");
 
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -87,6 +112,7 @@ public class HitsFragment extends BaseFragment {
 
                 for (DataSnapshot postSnapshot : snapshot.getChildren()) {
                     Map<String, String> map = (Map<String, String>) postSnapshot.getValue();
+
 
                     Object date = map.get((Object) "date");
                     datesList.add((Long) date);
@@ -96,6 +122,7 @@ public class HitsFragment extends BaseFragment {
 
                     Object total = map.get((Object) "totalHits");
                     totalList.add((Long) total);
+
                 }
                 System.out.println(" green:" + greenList + "  totals:" + totalList + "  dates:" + datesList);
                 createBarGraph(totalList, greenList, datesList);
@@ -108,6 +135,11 @@ public class HitsFragment extends BaseFragment {
     }
 
     protected void createBarGraph(ArrayList<Long> totalList, ArrayList<Long> greenList, ArrayList<Long> datesList) {
+
+        if ( (greenList.size() == 0) || (totalList.size() == 0) || (datesList.size() ==0) ) {
+            return;
+        }
+
         BarChart bchart = (BarChart) getView().findViewById(R.id.bChart);
         bchart.setBackgroundColor(Color.TRANSPARENT);
         bchart.setTouchEnabled(true);
@@ -125,18 +157,18 @@ public class HitsFragment extends BaseFragment {
         dataSet1.setColor(Color.rgb(0, 155, 0));
         BarDataSet dataSet2 = new BarDataSet(vals2, "Red Hits");
         dataSet2.setColor(Color.rgb(155, 0, 0));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
         String[] values = new String[datesList.size()];
         for (int j = 0; j < datesList.size(); j++) {
-            Date date = new Date(datesList.get(j));
-            values[j] = simpleDateFormat.format(date).toString().substring(5,7) +"/" + simpleDateFormat.format(date).toString().substring(8,10);
+            values[j] = datesList.get(j).toString().substring(0, 2) + "/" + datesList.get(j).toString().substring(2, 4) + "/" + datesList.get(j).toString().substring(4, 6);
         }
 
-        // bchart.getAxisRight().setAxisMinimum(0);
-        // bchart.getXAxis().setValueFormatter(MyXAxisValueFormatter);
+       // bchart.getXAxis().setValueFormatter(MyXAxisValueFormatter);
         bchart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         bchart.getXAxis().setAxisMinimum(0);
+        //bchart.getAxisRight().setAxisMinimum(0);
+
+
 
         BarData bData = new BarData(dataSet2, dataSet1);
         bData.setBarWidth(.4f);
@@ -144,7 +176,8 @@ public class HitsFragment extends BaseFragment {
         bchart.getAxisLeft().setDrawGridLines(false);
         bchart.getAxisRight().setDrawGridLines(false);
 
-        // bData.setValueFormatter(new MyXAxisValueFormatter(values));
+        //bData.setValueFormatter(new MyXAxisValueFormatter(values));
+
 
         XAxis newX = bchart.getXAxis();
         newX.setValueFormatter(new MyXAxisValueFormatter(values));
@@ -152,7 +185,6 @@ public class HitsFragment extends BaseFragment {
         bchart.setData(bData);
         bchart.groupBars(0, .07f, .01f);
         bchart.invalidate();
-
     }
 
 
