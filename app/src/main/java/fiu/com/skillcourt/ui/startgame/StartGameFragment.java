@@ -55,7 +55,7 @@ public class StartGameFragment extends ArduinosCommunicationFragment implements 
 
     public static StartGameFragment newInstance(ArrayList<String> sequences) {
         StartGameFragment startGameFragment = new StartGameFragment();
-        if (sequences != null) {
+        if (!sequences.isEmpty()) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(Constants.TAG_SEQUENCE, sequences);
             startGameFragment.setArguments(bundle);

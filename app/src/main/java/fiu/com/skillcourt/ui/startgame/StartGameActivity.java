@@ -21,8 +21,10 @@ public class StartGameActivity extends BaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (savedInstanceState == null) {
             List<String> sequences = null;
-            if (getIntent().hasExtra(Constants.TAG_SEQUENCE)) sequences = (List<String>) getIntent().getSerializableExtra(Constants.TAG_SEQUENCE);
-            replaceFragment(StartGameFragment.newInstance(new ArrayList<String>(sequences)), false);
+            if (getIntent().hasExtra(Constants.TAG_SEQUENCE)) {
+                sequences = (List<String>) getIntent().getSerializableExtra(Constants.TAG_SEQUENCE);
+            }
+            replaceFragment(StartGameFragment.newInstance(sequences == null ? new ArrayList<String>() : new ArrayList<String>(sequences)), false);
         }
         setNavigationToolbar();
     }
