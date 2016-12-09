@@ -15,6 +15,9 @@ Installation and maintenance is explained in the following video:
 
 https://www.youtube.com/watch?v=QfaFNA3pN5s&index=4
 
+NOTE:
+**** IF YOU GET A WARNING **** About not being able to "crunch a file" and it yells about a super silly .png file... To solve this, take the folder of Code and put it under your root directory. This error stems from the path to the .png mentioned is waaaay to long for little andriod studio to handle and so shortening this path (and will probably best to rename this long foldername too as just 'skillcourt') will make your life easier and your code ready to compile! -- Contact us if need me, of course!!! ******
+
 For any questions don't hesitate to contact us through the product owner.
 
 # Android application structure:
