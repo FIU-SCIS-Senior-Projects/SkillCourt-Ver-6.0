@@ -3,17 +3,14 @@
 Developers: 
 
 - Pedro Carrillo
-
 - April Perry
-
 - Jofran Pena
-
 - Rolando Ramos
 
 
-ALL DELIVERABLES will be found under -- "SkillCourt 6.0 folder"
 
-Within the code directory PLEASE USE FOLDER NAMED: 'Fall 2016 - SkillCourt 6.0 Code'
+
+Within this code directory PLEASE USE FOLDER NAMED: 'Fall 2016 - SkillCourt 6.0 Code'
 This folder contains the entire Android  project files, everything you'll need to run the application via the Andriod Studio IDE
 This folder also contains a folder called "arduino_skillcourt" that contains the Arduino code that will need to be compiled and upload to the physical Arduinos using the Arduino IDE
 
