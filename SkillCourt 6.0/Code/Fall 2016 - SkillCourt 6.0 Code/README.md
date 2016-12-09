@@ -7,6 +7,10 @@ Developers:
 - Jofran Pena
 - Rolando Ramos
 
+
+**** IF YOU GET A WARNING ****
+About not being able to "crunch a file" and it yells about a super silly .png file... To solve this, take the folder of Code and put it under your root directory. This error stems from the path to the .png mentioned is waaaay to long to andriod studio to handle and so shortening this path (and probably best to rename this long foldername too as just 'skillcourt') will make your life easier and your code ready to compile! -- Contact us if need me, of course!!!
+
 Installation and maintenance is explained in the following video:
 
 https://www.youtube.com/watch?v=QfaFNA3pN5s&index=4
