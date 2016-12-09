@@ -7,6 +7,10 @@ Developers:
 - Jofran Pena
 - Rolando Ramos
 
+
+ALL DELIVERABLES will be found under -- "SkillCourt 6.0 folder"
+
+
 Installation and maintenance is explained in the following video:
 
 https://www.youtube.com/watch?v=QfaFNA3pN5s&index=4
